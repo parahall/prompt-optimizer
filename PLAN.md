@@ -187,15 +187,88 @@ Each case is a folder with a prompt and graders (automatic checks: a text search
 - **Running the prompt against the real API to compare old and new versions.** This would be the strongest proof that a rewrite helps, but it needs an API key, costs money, and needs test inputs. We can add it later as an optional script.
 - **Automatic updates.** The refresh script tells the maintainer what changed; a person still edits the reference files.
 
-## 8. Later phase: OpenAI and Gemini
+## 8. Phase 2: OpenAI GPT models (research done 2026-11-08)
 
-The same research and build steps are repeated for each new provider:
+Gemini follows later with the same steps.
 
-1. Research that provider's official prompting guides and per-model notes, the same way as section 2. They are not organized like Anthropic's, so the first task is to map them onto the four parts of a provider folder.
-2. Add `tools/sources/<provider>.txt`. Their docs may not offer a plain Markdown copy of each page the way Anthropic's do, so the refresh script may need a page-to-text step for them.
-3. Write the provider folder and the line in `providers.md`.
-4. Add that provider's evaluation cases, including cross-provider migrations (a GPT prompt moving to Claude, and the reverse).
-5. Update the skill's description and the README.
+### 8.1 What OpenAI publishes
+
+All pages are on developers.openai.com and, like Anthropic's, have a plain Markdown copy when `.md` is added to the address. The list is in `tools/sources/openai.txt` (51 pages, downloaded and read).
+
+- **One "Using GPT-X" page per model family**: what's new, prompting best practices, migration. Families: GPT-6, GPT-5.6, 5.5, 5.4, 5.3-Codex, 5.2, 5.1, 5, 4.1.
+- **Extra pages for some families**: "Prompting guidance for GPT-5.6 Sol" (the most detailed page), "Upgrading to GPT-5.4 / 5.5 / 5.6 Sol", a front-end prompt page written for GPT-5.5, and older cookbook prompting guides (GPT-5, 5.1, 5.2, 4.1, Codex). The cookbook guides for GPT-5 and 5.1 are marked "archived".
+- **General pages**: Prompt engineering (message roles, Markdown and XML sections, examples), Reasoning models (the `reasoning.effort` setting and its table), Reasoning best practices (older, written for the o-series models).
+- **Model catalog pages**: effort levels, context window, knowledge cutoff, price, endpoints.
+
+### 8.2 How it differs from Anthropic's docs
+
+1. **The advice is written per family, not per model.** The GPT-6 prompting section covers GPT-6 Astra, 6.1 Sol, 6.1 Terra, 6 Luna, and 6 Sol together; it says the advice was observed on Astra and should be checked on the others. The members differ only in settings. Same for GPT-5.6 (Sol, Terra, Luna).
+2. **OpenAI's main message for current models is "remove, don't add".** GPT-5.6 docs report that leaner system prompts scored 10–15% higher with 41–66% fewer tokens in OpenAI's coding-agent tests. They say: state each rule once, remove repeated rules and examples that do not change behavior, describe the outcome instead of every step, and change a working prompt only for a measured failure. So for OpenAI the skill's main job is simplifying, more than inserting blocks.
+3. **Contradictions are the biggest risk.** OpenAI says GPT-5-class models spend reasoning trying to reconcile conflicting rules, and that this hurts them more than other models. Finding contradictions is the first audit item for OpenAI.
+4. **The settings are different**: `reasoning.effort` (`none`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`; which ones exist depends on the model), `text.verbosity` (`low`, `medium`, `high`), `reasoning.mode: "pro"`, `reasoning.context`, `phase` on assistant messages, `configuration_update` for changing effort mid-conversation, and `prompt_cache_options`.
+5. **The API you call matters.** On several models, tool calling with reasoning works only in the Responses API, not in Chat Completions. `temperature` and `top_p` work only at effort `none`.
+6. **Advice that helps one GPT model and hurts another**, the same kind of conflict as for Claude. Examples:
+   - Step-by-step process instructions: remove them for GPT-5.5 and 5.6 (they make answers mechanical); give the full step order for GPT-5.4 Mini (it is literal and needs it).
+   - "Think step by step": remove at effort `low` or higher (the model reasons on its own); asking it to plan helps at `none` and `minimal`.
+   - "Be concise": GPT-5.6 is already concise and the line can make answers too short; use `text.verbosity` instead.
+   - Formatting: GPT-6 Astra and 5.4 lean on lists and tables; 5.5 defaults to paragraphs.
+   - Asking before acting: GPT-6 Astra asks for clarification more often and may stop early; GPT-5.4 Mini asks follow-up questions unless told not to; repeated "ask first" lines on 5.6 cause needless approval stops.
+   - Schema in the prompt: GPT-5.5 says move it to Structured Outputs; GPT-5.2 extraction says always give a schema.
+   - The current date: GPT-5.5 says drop it (the model knows the UTC date).
+7. **GPT-6 Astra follows skill files and `AGENTS.md` more closely**, so unclear or conflicting guidance in them can stop its work. OpenAI recommends one sentence that gives the user's instructions priority over skill instructions.
+
+### 8.3 Files
+
+Change from what I first proposed: one file per **family**, not per model, because the docs are written that way. Where family members differ, the file says so.
+
+```
+skills/optimize-prompt/reference/openai/
+├── general-techniques.md   # roles, sections, examples, outcome-first prompts, stop rules, tool descriptions, prompt caching layout
+├── audit-checklist.md      # patterns to find, with a verdict per family (contradictions first)
+├── api-settings.md         # per model: effort levels and default, verbosity, endpoint limits, parameters that error
+├── snippets.md             # tested blocks shared by several families
+└── models/
+    ├── gpt-6.md            # GPT-6 Astra, GPT-6.1 Sol, GPT-6.1 Terra, GPT-6 Luna, GPT-6 Sol
+    ├── gpt-5-6.md          # GPT-5.6 Sol, Terra, Luna (with the 5.6 Sol prompting page)
+    ├── gpt-5-5.md          # GPT-5.5 (rich own guidance, still widely used)
+    ├── gpt-5-4.md          # GPT-5.4 and 5.4 Mini (rich own guidance; Mini needs the opposite style)
+    └── legacy.md           # GPT-5.3-Codex, 5.2, 5.1, 5, 4.1: short notes, mainly to recognize old habits when migrating
+```
+
+Out of scope for OpenAI in this phase: voice models (GPT-Live, Realtime), image models (GPT-Image), open-weight models (gpt-oss), and the cybersecurity models. The skill says it does not cover them.
+
+### 8.4 Changes to the shared parts
+
+- `providers.md`: mark `openai/` as supported; list the name patterns (`gpt-6…`, `gpt-5…`, `gpt-4.1`); state the out-of-scope models.
+- `SKILL.md`: Step 2 names files by their role, not by Anthropic paths, so it works for any provider folder. Step 4 gains one provider-neutral rule: when the provider's guidance prefers lean prompts (OpenAI does), removing repeated and conflicting rules comes before adding anything. The description says "Claude and OpenAI GPT models".
+- Quoted blocks are marked "Quoted from OpenAI", the same way as Anthropic's. `tools/check-references.py` checks quotes and links for every provider folder.
+- README: OpenAI added to "Supported now" and to the credit note.
+- Cross-provider migration (for example a GPT prompt moving to Claude, or a Claude prompt moving to GPT-6): the skill loads the source provider's checklist to remove habits that belong only to the old model (for example Claude's effort wording, or GPT's `phase` or `<persistence>` blocks).
+
+### 8.5 Test cases to add
+
+1. GPT-6 Astra agent that keeps asking for approval → the initiative and follow-through blocks are added.
+2. GPT-6 Astra prompt with no rule on skill priority, in an app that loads skills → the priority sentence is added.
+3. GPT-5.6 prompt with the same rule stated three times and examples that change nothing → repeats removed; the prompt gets shorter.
+4. GPT-5.6 prompt with "Be concise. Keep it short." → removed or replaced, and `text.verbosity` recommended.
+5. GPT-5.5 prompt with a step-by-step process script → rewritten as an outcome with success criteria and stop rules.
+6. GPT-5.4 Mini prompt that relies on implied steps → explicit step order kept or added (the opposite of case 5).
+7. Prompt with contradictory rules (for example "always ask before booking" and "book automatically") → the conflict is named and resolved, not left in.
+8. Settings: a request that sends `temperature` with effort `medium`, or effort `none` to GPT-6 Astra → the report flags both as errors.
+9. "Think step by step" for GPT-6.1 Sol at `medium` → removed; kept as planning at effort `none` on GPT-6 Luna.
+10. A good prompt for GPT-5.6 → almost no changes.
+11. Unknown OpenAI model (for example `gpt-7`) → says so; does not invent advice.
+12. Cross-provider: a Claude-tuned prompt moving to GPT-6 Astra, and a GPT-tuned prompt moving to Claude Opus 5.5 → each side's model-specific habits are removed.
+13. Replace the current "OpenAI not supported" case with "Gemini not supported".
+
+### 8.6 Build order
+
+1. Write the OpenAI reference files, quotes first checked by the script → check: all quotes match the docs, every family in the catalog that is in scope has a file, all links work.
+2. Generalize `SKILL.md` and `providers.md` → check: the existing 12 Claude cases still pass.
+3. Write the OpenAI test cases and run them with and without the skill, then with Sonnet and Haiku → check: at least 11 of 13 pass with the skill; a clear difference from the run without it.
+4. Update README and this plan; commit and push → check: the GitHub repository shows the new folder.
+
+Expected test cost: about $20–30, similar to the Claude phase.
 
 ## 9. Progress (2026-11-08)
 
@@ -210,4 +283,15 @@ The same research and build steps are repeated for each new provider:
 
 ## 10. Open questions for you
 
-None at the moment. The repository is parahall/prompt-optimizer (private).
+The repository is parahall/prompt-optimizer (private). None open at the moment.
+
+## 11. Progress of the OpenAI phase (2026-11-08)
+
+- Built as planned in section 8, with one file per model family (approved by the user).
+- `python3 tools/check-references.py` passes for both providers: 82 Anthropic and 53 OpenAI quoted blocks match the docs word for word, every OpenAI model family in the source list is covered, and all 32 links work.
+- The refresh script had a bug found during this phase: pages with the same final name overwrote each other (the GPT-6 guide and the GPT-6 Astra catalog page). Files are now named by the last two parts of the address.
+- Tests (26 cases, one run each unless noted):
+  - Default model, with and without the skill: all 26 pass with the skill. Without it, every case except the two unknown-model cases scores lower; the average difference is +0.71. Without the skill, the model gets GPT-6 settings wrong (GPT-6 is newer than its knowledge).
+  - Sonnet running the skill: all OpenAI and cross-provider cases pass except one refused by Sonnet 5.5's safety filter (the test prompt asks for reasoning in `<thinking>` tags; the known limit in the README).
+  - Haiku running the skill: after three small `SKILL.md` fixes (pasted prompts after a description, source links for settings, `text.verbosity` for length problems), 7 of 8 reruns of its weak cases pass. Remaining weak spot: Haiku sometimes reads a pasted step script as a description and asks for the prompt.
+- Test cost of the OpenAI phase: about $20.

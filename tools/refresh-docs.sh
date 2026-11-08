@@ -21,7 +21,8 @@ for provider in "${providers[@]}"; do
   dir="$root/docs-cache/$provider"
   mkdir -p "$dir"
   grep -vE '^\s*(#|$)' "$list" | while read -r url; do
-    name="$(basename "$url")"
+    # Name by the last two path parts, so pages with the same final name do not collide.
+    name="$(basename "$(dirname "$url")")_$(basename "$url")"
     tmp="$(mktemp)"
     if ! curl -fsSL "$url" -o "$tmp"; then
       echo "FAILED  $url"; rm -f "$tmp"; continue
