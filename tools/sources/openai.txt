@@ -1,0 +1,44 @@
+# One documentation page per line. Lines starting with # are ignored.
+# OpenAI serves a plain Markdown copy of every docs page when ".md" is added to the address.
+# Per-model 'Using' pages
+https://developers.openai.com/api/docs/guides/latest-model/gpt-6-astra.md
+https://developers.openai.com/api/docs/guides/latest-model/gpt-5.6.md
+https://developers.openai.com/api/docs/guides/latest-model/gpt-5.5.md
+https://developers.openai.com/api/docs/guides/latest-model/gpt-5.4.md
+https://developers.openai.com/api/docs/guides/latest-model/gpt-5.3-codex.md
+https://developers.openai.com/api/docs/guides/latest-model/gpt-5.2.md
+https://developers.openai.com/api/docs/guides/latest-model/gpt-5.1.md
+https://developers.openai.com/api/docs/guides/latest-model/gpt-5.md
+https://developers.openai.com/api/docs/guides/latest-model/gpt-4.1.md
+# Per-model prompting and upgrade pages
+https://developers.openai.com/api/docs/guides/prompt-guidance-gpt-5p6.md
+https://developers.openai.com/api/docs/guides/upgrading-to-gpt-5p6-sol.md
+https://developers.openai.com/api/docs/guides/upgrading-to-gpt-5p5.md
+https://developers.openai.com/api/docs/guides/upgrading-to-gpt-5p4.md
+https://developers.openai.com/api/docs/guides/frontend-prompt.md
+# Cookbook prompting guides
+https://developers.openai.com/cookbook/examples/gpt-5/gpt-5_prompting_guide.md
+https://developers.openai.com/cookbook/examples/gpt-5/gpt-5-1_prompting_guide.md
+https://developers.openai.com/cookbook/examples/gpt-5/gpt-5-2_prompting_guide.md
+https://developers.openai.com/cookbook/examples/gpt-5/codex_prompting_guide.md
+https://developers.openai.com/cookbook/examples/gpt-5/prompt_personalities.md
+https://developers.openai.com/cookbook/examples/gpt4-1_prompting_guide.md
+# General guides
+https://developers.openai.com/api/docs/guides/prompt-engineering.md
+https://developers.openai.com/api/docs/guides/prompting.md
+https://developers.openai.com/api/docs/guides/reasoning.md
+https://developers.openai.com/api/docs/guides/reasoning-best-practices.md
+# Model catalog pages (settings: reasoning effort, context, pricing)
+https://developers.openai.com/api/docs/models.md
+https://developers.openai.com/api/docs/models/gpt-6-astra.md
+https://developers.openai.com/api/docs/models/gpt-6.1-sol.md
+https://developers.openai.com/api/docs/models/gpt-6.1-terra.md
+https://developers.openai.com/api/docs/models/gpt-6-luna.md
+https://developers.openai.com/api/docs/models/gpt-6-sol.md
+https://developers.openai.com/api/docs/models/gpt-5.6-sol.md
+https://developers.openai.com/api/docs/models/gpt-5.6-terra.md
+https://developers.openai.com/api/docs/models/gpt-5.6-luna.md
+https://developers.openai.com/api/docs/models/gpt-5.5.md
+https://developers.openai.com/api/docs/models/gpt-5.4.md
+https://developers.openai.com/api/docs/models/gpt-5.4-mini.md
+https://developers.openai.com/api/docs/models/gpt-5.2.md

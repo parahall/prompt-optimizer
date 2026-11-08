@@ -7,13 +7,18 @@ You give it a prompt (an app's system prompt, agent instructions, a `CLAUDE.md` 
 1. checks the prompt against the model maker's official prompting guidance for that exact model,
 2. rewrites it with as few changes as possible,
 3. explains every change with a link to the documentation section it comes from,
-4. recommends matching API settings (for Claude: effort level, thinking mode, `max_tokens`),
+4. recommends matching API settings (for Claude: effort level, thinking mode, `max_tokens`; for OpenAI: reasoning effort, `text.verbosity`, which API to call),
 5. says what to test on real traffic.
 
-Why per model: the same instruction can help one model and hurt another. "Double-check your answer" helps most Claude models but causes wasted re-checking on Claude Opus 5. A rule against bullet points helps older models but suppresses needed structure on Claude Fable 5.1. Asking for reasoning inside `<thinking>` tags, once common advice, can make the newest Claude models decline the request.
+It also moves prompts between providers, for example a prompt tuned for Claude that will now run on GPT-6, removing the habits that only made sense for the old model.
 
-**Supported now:** Claude models (Fable 5.1, Fable 5, Opus 5.5, Opus 5, Opus 4.8, Sonnet 5.5, Sonnet 5, Haiku 5.5, and short notes for older models).
-**Planned:** OpenAI and Google Gemini models.
+Why per model: the same instruction can help one model and hurt another. "Double-check your answer" helps most Claude models but causes wasted re-checking on Claude Opus 5. A rule against bullet points helps older models but suppresses needed structure on Claude Fable 5.1. Asking for reasoning inside `<thinking>` tags, once common advice, can make the newest Claude models decline the request. On the OpenAI side, a step-by-step process script makes GPT-5.5 mechanical but is exactly what GPT-5.4 Mini needs, and "Be concise" can make GPT-5.6 answers too short.
+
+**Supported now:**
+- Claude models: Fable 5.1, Fable 5, Opus 5.5, Opus 5, Opus 4.8, Sonnet 5.5, Sonnet 5, Haiku 5.5, and short notes for older models.
+- OpenAI GPT text models: the GPT-6 family (Astra, 6.1 Sol, 6.1 Terra, Luna, 6 Sol), the GPT-5.6 family (Sol, Terra, Luna), GPT-5.5, GPT-5.4 and 5.4 Mini, and short notes for 5.3-Codex, 5.2, 5.1, 5, and 4.1. Voice, image, and open-weight models are not covered.
+
+**Planned:** Google Gemini models.
 
 ## Example
 
@@ -93,12 +98,18 @@ skills/optimize-prompt/
 ├── SKILL.md                     # the workflow
 └── reference/
     ├── providers.md             # model name → provider folder
-    └── anthropic/
-        ├── audit-checklist.md   # patterns to find, with a verdict per model
-        ├── api-settings.md      # effort, thinking, max_tokens per model
+    ├── anthropic/
+    │   ├── audit-checklist.md   # patterns to find, with a verdict per model
+    │   ├── api-settings.md      # effort, thinking, max_tokens per model
+    │   ├── general-techniques.md
+    │   ├── snippets.md          # tested text blocks shared by several models
+    │   └── models/              # one file per model
+    └── openai/
+        ├── audit-checklist.md   # contradictions first, then repetition, scripts, ...
+        ├── api-settings.md      # reasoning effort, verbosity, endpoint limits per model
         ├── general-techniques.md
-        ├── snippets.md          # tested text blocks shared by several models
-        └── models/              # one file per model
+        ├── snippets.md          # which model file holds the block for each symptom
+        └── models/              # one file per model family (OpenAI writes its advice per family)
 ```
 
 Each provider folder has the same parts, so adding a provider does not change the workflow.
@@ -108,13 +119,15 @@ Each provider folder has the same parts, so adding a provider does not change th
 Model makers update their guides often. Two scripts help:
 
 - `tools/refresh-docs.sh` downloads the documentation pages listed in `tools/sources/<provider>.txt` into `docs-cache/` (not committed) and prints what changed since the last download.
-- `python3 tools/check-references.py` confirms that every quoted block still appears word for word in the docs, that every model in the guide has a file, and that every link works.
+- `python3 tools/check-references.py` confirms, for every provider folder, that every quoted block still appears word for word in the docs, that every model or model family in the docs has a file, and that every link works.
 
 Tests: `claude plugin eval .` runs the cases in `evals/`, each with and without the skill. The case that tests file output needs `--scaffold --allow-tools Write`.
 
 ## Sources and credit
 
 The rules in `skills/optimize-prompt/reference/anthropic/` summarize, in our own words, Anthropic's public prompting documentation at [platform.claude.com/docs](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices). Text blocks marked "Quoted from Anthropic" are copied word for word from those pages, with a link to the exact section, so the skill can insert the tested wording unchanged. The quoted text remains the work of Anthropic.
+
+The rules in `skills/optimize-prompt/reference/openai/` do the same for OpenAI's public documentation at [developers.openai.com](https://developers.openai.com/api/docs/guides/prompt-engineering). Text blocks marked "Quoted from OpenAI" are copied word for word, with the page and section named. The quoted text remains the work of OpenAI.
 
 This project is independent and is not made or endorsed by Anthropic, OpenAI, or Google.
 
