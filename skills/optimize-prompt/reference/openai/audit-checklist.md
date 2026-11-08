@@ -28,7 +28,7 @@ Contents
 
 **Spot it:** two rules that cannot both hold, or hold without saying which wins: "always look up X first" next to "in an emergency, act immediately"; "never act without consent" next to "do it automatically"; "be concise" next to "err on the side of completeness"; a formal tone next to "use emojis sometimes"; examples that show behavior the rules forbid.
 
-**Verdict, all families: resolve every conflict.** Say which rule wins and when (an explicit exception), or delete one. GPT-5-class models follow prompt contracts closely and spend reasoning trying to reconcile conflicts, which OpenAI says hurts them more than missing detail. GPT-4.1 tends to follow whichever conflicting rule comes last. Name each conflict in the report.
+**Verdict, all families: resolve every conflict.** Say which rule wins and when (an explicit exception), or delete one, when at least one side is a soft preference. When both sides are hard requirements (safety, permissions, legal or business rules), do not choose: keep both, name the conflict, and ask the user which wins (see `SKILL.md`, Step 4). GPT-5-class models follow prompt contracts closely and spend reasoning trying to reconcile conflicts, which OpenAI says hurts them more than missing detail. GPT-4.1 tends to follow whichever conflicting rule comes last. Name each conflict in the report.
 
 Sources: GPT-5.6 prompting page, "Simplify prompts first"; Using GPT-5, "Instruction following"; Using GPT-4.1, "Recommended Workflow".
 

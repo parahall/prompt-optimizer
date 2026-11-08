@@ -66,7 +66,7 @@ Before raising effort, check whether the prompt is missing a success criterion, 
 
 Report any of these found in the user's code or described setup:
 
-- `temperature`, `top_p`, `logprobs` (and `top_logprobs`) with any effort other than `none`: error on GPT-5.4, GPT-5.2, and GPT-6; must be removed. On older GPT-5 models (`gpt-5`, `gpt-5-mini`, `gpt-5-nano`) they error at every setting. Use effort, `text.verbosity`, and `max_output_tokens` instead.
+- `temperature`, `top_p`, `logprobs` (and `top_logprobs`) with any effort other than `none`: error on GPT-5.4, GPT-5.2, and GPT-6; must be removed. On GPT-6 in the Responses API, also remove `message.output_text.logprobs` from `include`. On older GPT-5 models (`gpt-5`, `gpt-5-mini`, `gpt-5-nano`) they error at every setting. Use effort, `text.verbosity`, and `max_output_tokens` instead.
 - Effort `none` on GPT-6 Astra or GPT-6.1 Sol: HTTP 400; use `low`. Effort `none` on GPT-5.3-Codex: not supported.
 - Effort `minimal` on GPT-6 models: start with `low` instead.
 - Function tools in Chat Completions on GPT-6 Astra or GPT-6.1 Sol: not supported; on GPT-5.6, GPT-6 Sol, and GPT-6 Luna only with effort `none`.
