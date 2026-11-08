@@ -70,7 +70,7 @@ Sources: [Steering thinking](https://platform.claude.com/docs/en/build-with-clau
 
 **Spot it:** "CRITICAL", "IMPORTANT", "You MUST", "ALWAYS", "NEVER" in capitals; "for EVERY message"; "If in doubt, use [tool]"; "Default to using [tool]".
 
-**Verdict, all current models: soften.** Newer models follow the system prompt closely, and wording written to fix under-use now causes over-use. Write "Use [tool] when [condition], because [reason]." Keep real hard limits (safety, irreversible actions) but state them calmly with the reason.
+**Verdict, all current models: soften the wording, keep the condition.** Newer models follow the system prompt closely, and wording written to fix under-use now causes over-use. Change only the tone, the way Anthropic's example turns "CRITICAL: You MUST use this tool when..." into "Use this tool when...": keep the author's own condition exactly, and add the reason. If the condition itself looks too broad (for example "for every message"), keep it in the prompt and suggest a narrower condition in the report's open questions; narrowing it is the user's decision. Keep real hard limits (safety, irreversible actions), stated calmly with the reason.
 
 Source: best practices, "Tool usage" and "Overthinking and excessive thoroughness".
 
@@ -136,7 +136,8 @@ Symptom-driven: add a scope block only for coding or task agents where unrequest
 
 ## 13. Subagent rules
 
-- Opus 5 and Fable 5 delegate readily. "Use subagents for everything" multiplies cost; add the damping block from `models/opus-5.md` for cost-sensitive harnesses.
+- Opus 5 delegates readily. "Use subagents for everything" multiplies cost; add the damping block from `models/opus-5.md` for cost-sensitive harnesses.
+- Fable 5 also dispatches subagents readily, but its docs recommend using them, with guidance on when ("Parallel subagents" in `models/fable-5.md`), and recommend fresh-context verifier subagents for long runs. Do not copy Opus 5's block into a Fable 5 prompt: its "do not use subagents to verify" line contradicts Fable 5's guidance.
 - Opus 4.8 spawns fewer subagents by default; add explicit "when to spawn" guidance only if more delegation is wanted.
 - Never tell a model to use subagents to verify its own work on Opus 5.
 
