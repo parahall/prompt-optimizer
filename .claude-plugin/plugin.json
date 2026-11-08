@@ -1,0 +1,7 @@
+{
+  "name": "prompt-optimizer",
+  "description": "Rewrites a prompt so it follows the official prompting guidance for the specific model that will run it, and explains every change.",
+  "version": "0.1.0",
+  "author": { "name": "Yoni Levin" },
+  "license": "MIT"
+}

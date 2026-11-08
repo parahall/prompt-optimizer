@@ -1,0 +1,12 @@
+{
+  "name": "prompt-optimizer",
+  "description": "A skill that optimizes prompts for a specific model.",
+  "owner": { "name": "Yoni Levin" },
+  "plugins": [
+    {
+      "name": "prompt-optimizer",
+      "source": "./",
+      "description": "Rewrites a prompt for a specific model, following the model maker's official prompting guidance."
+    }
+  ]
+}

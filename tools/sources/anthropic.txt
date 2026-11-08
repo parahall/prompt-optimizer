@@ -1,0 +1,16 @@
+# One documentation page per line. Lines starting with # are ignored.
+# Anthropic serves a plain Markdown copy of every docs page when ".md" is added to the address.
+https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices.md
+https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1.md
+https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5.md
+https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5.md
+https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5.md
+https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-4-8.md
+https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5.md
+https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5.md
+https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-haiku-5-5.md
+https://platform.claude.com/docs/en/build-with-claude/effort.md
+https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost.md
+https://platform.claude.com/docs/en/build-with-claude/refusals-and-fallback.md
+https://platform.claude.com/docs/en/models/overview.md
+https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting.md

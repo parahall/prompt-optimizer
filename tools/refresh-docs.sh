@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Downloads the documentation pages the skill's reference files are based on,
+# and shows what changed since the last download. For maintainers only; the
+# skill itself never runs this.
+#
+# Usage: tools/refresh-docs.sh [provider]     (default: all providers)
+# Pages are saved in docs-cache/<provider>/ (ignored by git). The previous copy
+# of each page is kept as <page>.prev so the diff can be shown.
+set -euo pipefail
+
+root="$(cd "$(dirname "$0")/.." && pwd)"
+providers=("$@")
+if [ ${#providers[@]} -eq 0 ]; then
+  providers=()
+  for f in "$root"/tools/sources/*.txt; do providers+=("$(basename "$f" .txt)"); done
+fi
+
+for provider in "${providers[@]}"; do
+  list="$root/tools/sources/$provider.txt"
+  [ -f "$list" ] || { echo "No source list: $list" >&2; exit 1; }
+  dir="$root/docs-cache/$provider"
+  mkdir -p "$dir"
+  grep -vE '^\s*(#|$)' "$list" | while read -r url; do
+    name="$(basename "$url")"
+    tmp="$(mktemp)"
+    if ! curl -fsSL "$url" -o "$tmp"; then
+      echo "FAILED  $url"; rm -f "$tmp"; continue
+    fi
+    if [ ! -f "$dir/$name" ]; then
+      mv "$tmp" "$dir/$name"; echo "NEW     $provider/$name"
+    elif cmp -s "$tmp" "$dir/$name"; then
+      rm -f "$tmp"; echo "same    $provider/$name"
+    else
+      mv "$dir/$name" "$dir/$name.prev"; mv "$tmp" "$dir/$name"
+      echo "CHANGED $provider/$name"
+      diff -u "$dir/$name.prev" "$dir/$name" | head -200 || true
+    fi
+  done
+done
