@@ -2,7 +2,7 @@
 
 Checked against the docs on 2026-11-08.
 Source: [Prompting Claude Fable 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5) (section names below refer to this page).
-API ID `claude-fable-5`. Default effort `high`. Thinking is always on (adaptive only, summarized output only). Settings: `api-settings.md`.
+API IDs `claude-fable-5` (Mythos 5: `claude-mythos-5`; the two share this prompting guidance but are separate models). Default effort `high`. Thinking is always on (adaptive only, summarized output only). Settings: `api-settings.md`.
 
 Contents: How it differs · Remove from prompts · Add when you see this symptom · API settings · Known traps
 Symptoms covered:

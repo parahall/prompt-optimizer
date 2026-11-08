@@ -22,8 +22,8 @@ Contents
 
 | Model | API ID | Default effort | Effort levels | Thinking when the field is omitted | Thinking can be turned off? |
 |---|---|---|---|---|---|
-| Fable 5.1 / Mythos 5.1 | `claude-fable-5-1` | high | all five | adaptive, always on | No (`disabled` returns 400) |
-| Fable 5 / Mythos 5 | `claude-fable-5` | high | all five | adaptive, always on | No |
+| Fable 5.1 / Mythos 5.1 | `claude-fable-5-1` / `claude-mythos-5-1` | high | all five | adaptive, always on | No (`disabled` returns 400) |
+| Fable 5 / Mythos 5 | `claude-fable-5` / `claude-mythos-5` | high | all five | adaptive, always on | No |
 | Opus 5.5 | `claude-opus-5-5` | **medium** | all five | adaptive, always on | No |
 | Opus 5 | `claude-opus-5` | high | all five | adaptive, on | `disabled` only at effort `high` or below |
 | Opus 4.8 | `claude-opus-4-8` | high | all five | **off** (send `adaptive` to turn on) | Yes |
@@ -69,6 +69,6 @@ Report any of these found in the user's code or described setup:
 ## 5. Rules that affect how the prompt may change
 
 - **Keep the system prompt fixed within a conversation** on Haiku 5.5 and the 5.1-generation models. Changing `system` or `tools` mid-conversation invalidates earlier thinking blocks (can return a 400 error). Put new instructions in a mid-conversation system message or the newest user turn instead. Tell the user to apply the optimized prompt to new conversations only.
-- **Changing top-level effort between requests breaks the prompt cache.** For per-turn changes, recommend the per-message effort change (beta) where the model supports it.
+- **Changing top-level effort between requests breaks the prompt cache.** For per-turn changes, recommend the per-message effort change (beta) where the model supports it. It needs adaptive thinking: a per-message effort that differs from the level in effect returns a 400 error with `between_tools` on Sonnet 5.5 and with `thinking: {type: "disabled"}` on Haiku 5.5.
 - **Read responses by block type.** On models where thinking is on, a reply may start with a `thinking` block; code that reads `content[0].text` breaks.
 - **Progress updates on Opus 5.5, Sonnet 5.5, Fable 5.1** arrive as thinking blocks that are empty at the default display. If the user says the agent "looks silent", recommend `display: "updates"` before changing the prompt.

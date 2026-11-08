@@ -10,7 +10,7 @@ When the user is migrating a prompt **from** one of these models to a current mo
 - Effort guidance is the same as Opus 4.8: `xhigh` for coding and agentic work, at least `high` for intelligence-sensitive work. At `low`, pair the prompt with an explicit checklist if the task has several sections. `max` can over-think structured-output tasks.
 - Respects effort strictly; at low effort it does only what was asked. If reasoning is shallow, raise effort rather than prompting around it.
 - Thinking off by default; adaptive only (manual `budget_tokens` returns a 400 error).
-- Most Opus 4.8 notes (literal instruction following, design defaults) are described as shared with it.
+- The docs share effort guidance between Opus 4.7 and 4.8, and Opus 4.7 prompts work on 4.8, but Opus 4.8's other behaviors (such as its design defaults) are documented for 4.8 only. Do not present them as documented Opus 4.7 behavior.
 
 ## Claude Opus 4.6 (`claude-opus-4-6`)
 
