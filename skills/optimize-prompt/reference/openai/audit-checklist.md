@@ -53,9 +53,11 @@ Sources: GPT-5.6 prompting page, "Simplify prompts first"; Using GPT-5, "Instruc
 
 **Spot it:** "think step by step", "explain your reasoning before answering", "show your work", a "reasoning" section to fill before the answer.
 
+This item is about asking the model to reason out loud. It is not about work plans: staged plans, a plan tool, or naming the current phase of long work are still recommended for current families (GPT-5.6 upgrade guide: "staged plans, current-layer awareness, and concise handoffs for long work").
+
 **Verdict:**
 - GPT-5-class and GPT-6 models at effort `low` or higher: **remove.** They reason internally; OpenAI says such instructions are unnecessary and can hurt. Control depth with `reasoning.effort`; put success criteria in the prompt instead.
-- At effort `none` (GPT-5.1, 5.2, 5.4, 5.6, 6.1 Terra, 6 Luna, 6 Sol) or `minimal` (GPT-5): asking the model to **plan or outline its steps** before tool calls helps.
+- At effort `none`: OpenAI documents that asking the model to **plan or outline its steps** helps on GPT-5.1, GPT-5.2, and GPT-5.4 (and at `minimal` on GPT-5). Keep such an instruction on those models. For other models that accept `none` (GPT-5.6, GPT-6.1 Terra, GPT-6 Luna, GPT-6 Sol), the docs do not say; keep an existing planning instruction, and say the benefit is documented only for the older models.
 - GPT-4.1 (not a reasoning model): prompted chain of thought helps; keep it.
 - "Think harder" / "use pro mode" / "generate several candidates": remove; use `reasoning.mode: "pro"` (GPT-5.6, GPT-6) if more work is wanted.
 
@@ -91,9 +93,9 @@ Sources: GPT-5.6 prompting page, "Simplify prompts first"; Using GPT-5, "Instruc
 
 ## 9. Output schemas written in prose
 
-- GPT-5.5 and later: **move JSON shapes to Structured Outputs** (`text.format` with a JSON schema) and remove the prose schema; keep only rules the schema cannot express. Recommend this in the settings part of the report.
+- GPT-5.5 and later: OpenAI says to remove schema definitions from the prompt "where possible" and use Structured Outputs (`text.format` with a JSON schema) instead. The rewritten prompt is only half of the change, so **remove the prose schema only if the user confirms the app already sends, or will send, an equivalent schema in the request**. Otherwise keep the prose schema in the prompt and recommend Structured Outputs in the settings part of the report, saying the prose schema can be deleted once the request carries the schema.
 - GPT-5.4 Mini: a schema alone is not enough for tool workflows; show the correct flow too.
-- GPT-5.2 extraction: always gave a schema in the prompt; when migrating to 5.5 or later, move it.
+- GPT-5.2 extraction: "Always provide a schema or JSON shape for the output. You can use structured outputs for strict schema adherence." When migrating, first check how the app supplies the shape today (prompt text or Structured Outputs), then apply the GPT-5.5 rule above.
 
 ## 10. The current date
 

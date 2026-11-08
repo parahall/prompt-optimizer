@@ -95,15 +95,16 @@ def cache_corpus(provider: str, sources: str) -> str:
     """Text of the cached pages that are on the current source list only, so pages
     dropped from the list (or left over from an older naming scheme) cannot vouch for a quote."""
     cache = ROOT / "docs-cache" / provider
-    texts = []
+    texts, missing = [], 0
     for url in re.findall(r"^\s*(https://\S+)", sources, re.M):
         parts = url.rstrip("/").split("/")
         path = cache / f"{parts[-2]}_{parts[-1]}"
         if path.exists():
             texts.append(path.read_text())
         else:
+            missing += 1
             print(f"NOT DOWNLOADED (run tools/refresh-docs.sh): {url}")
-    return norm("\n".join(texts))
+    return norm("\n".join(texts)), missing
 
 
 def main() -> int:
@@ -118,7 +119,8 @@ def main() -> int:
             print(f"docs-cache/{provider} is missing; run tools/refresh-docs.sh first")
             return 1
         sources = (ROOT / f"tools/sources/{provider}.txt").read_text()
-        corpus = cache_corpus(provider, sources)
+        corpus, missing = cache_corpus(provider, sources)
+        failures += missing
 
         count = 0
         for path in sorted(ref.rglob("*.md")):

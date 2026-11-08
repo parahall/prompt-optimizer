@@ -59,7 +59,7 @@ Contents
 - Ask for a short visible preamble before the first tool call and sparse updates at phase changes, not narration of every call.
 - Define the current layer of work (research, design, implementation, review) for long work.
 - Ask for real validation before finishing (tests, type checks, build, render checks) and an explanation when validation cannot run.
-- With effort `none`, prompted planning before tool calls helps; at higher effort it is unnecessary.
+- Work plans for long tasks (staged plans, a plan tool, the current phase) help at any effort. Asking the model to reason out loud before answering is unnecessary at effort `low` or higher; at effort `none`, outlining steps first is documented to help on GPT-5.1, 5.2, and 5.4.
 
 ## 8. Changing a working prompt ("Prompt migration workflow")
 

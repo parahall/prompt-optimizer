@@ -37,7 +37,7 @@ From the target provider's folder, `reference/<provider>/` next to this file, re
 
 **Unknown model of a supported provider** (a newer name with no file): say so first. If web access is available, fetch the provider's page for it and use it as the model file, telling the user the advice comes from a live page the skill has not been checked against:
 - Claude: `https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-<model-id-without-claude->.md` (for example `prompting-claude-opus-5-5.md`).
-- OpenAI: find the model's "Using …" and "Prompting guidance …" pages in `https://developers.openai.com/api/docs/llms.txt`, and add `.md` to their addresses.
+- OpenAI: find the model's "Using …" and "Prompting guidance …" pages in `https://developers.openai.com/api/docs/llms.txt` and fetch the addresses as listed (they already end in `.md`; add `.md` only to an address that lacks it).
 
 If no page exists, apply only the general files plus the closest model in the same family, say which one, and never present guesses about the unknown model as facts.
 
@@ -56,8 +56,9 @@ Rules for the rewrite:
   2. Apply missing general structure: the reason behind rules, what to do instead of what not to do, separated sections for mixed content, long documents before the question, examples where format matters.
   3. Add a model-specific block **only when the prompt's situation matches that block's symptom** (from the user's report, or clearly implied by the kind of prompt; for example an unattended agent, or a user-facing chat on Opus 5). List other relevant blocks under "Optional additions" in the report instead of adding them.
 - **When the checklist or a model file names a replacement block, use that block** instead of writing your own version of the fix. Insert quoted blocks word for word. Fill in placeholders only where a block says to. Text you write yourself is not tested by the model maker; keep it short.
+- **Exception: blocks the docs present as examples of a pattern** (the model file says "Example", "example from", or "adapt"; or the block names a specific scenario such as a customer eligibility decision, fixed output fields, or a sample website). Copy the pattern, replace the scenario-specific parts with the user's own task, fields, and constraints, and say in the report that the block was adapted. Never put the example's task or fields into a prompt for a different task.
 - **Recommend settings instead of wording** where the docs say a setting is the better lever (effort, thinking mode, verbosity, token limits).
-- Never add instructions that ask a reasoning model to write out its reasoning. For Claude, never keep a `<thinking>`, `<reasoning>`, or `<scratchpad>` section in the output format, even renamed to "short explanation"; if the app needs an explanation, ask for it after the answer in a tag such as `<explanation>`. For GPT models, follow the checklist item on thinking step by step (planning instructions help only at effort `none` or `minimal`, and on GPT-4.1).
+- Never add instructions that ask a reasoning model to write out its reasoning. For Claude, never keep a `<thinking>`, `<reasoning>`, or `<scratchpad>` section in the output format, even renamed to "short explanation"; if the app needs an explanation, ask for it after the answer in a tag such as `<explanation>`. For GPT models, follow the checklist item on thinking step by step: asking the model to reason out loud is unnecessary at effort `low` or higher; outlining steps first is documented to help at effort `none` on GPT-5.1, 5.2, and 5.4, at `minimal` on GPT-5, and on GPT-4.1. Work plans for long tasks (staged plans, a plan tool) are a different thing and stay.
 
 ## Step 5: Deliver
 

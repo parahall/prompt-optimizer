@@ -40,7 +40,7 @@ Use this file mainly to **recognize habits written for these models** when a pro
 ```
 
 - At effort `none`, ask the model to think or outline its steps before answering.
-- 5.2 extraction guidance says to always give a schema in the prompt; GPT-5.5 says to move schemas to Structured Outputs. When migrating 5.2 → 5.5 or later, move the schema.
+- 5.2 extraction guidance says: "Always provide a schema or JSON shape for the output. You can use structured outputs for strict schema adherence." When migrating to 5.5 or later, first check how the app supplies the shape (prompt text or Structured Outputs), then follow `audit-checklist.md`, item 9.
 
 ## GPT-5.1 (`gpt-5.1`)
 

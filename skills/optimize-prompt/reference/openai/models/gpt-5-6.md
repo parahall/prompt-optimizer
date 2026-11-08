@@ -56,7 +56,7 @@ Keep: the user-visible outcome; success criteria and stop rules; safety, busines
 ## Add when you see this symptom
 
 ### The prompt scripts every step instead of stating the goal
-Rewrite as outcome plus success criteria. Example from P56 ("Outcome-first prompts and stopping conditions"):
+Rewrite as outcome plus success criteria. Example from P56 ("Outcome-first prompts and stopping conditions"); it is a pattern: adapt the task and the output fields to the user's prompt, do not copy them:
 
 > Quoted from OpenAI · "Prompting guidance for GPT-5.6 Sol" · "Outcome-first prompts and stopping conditions"
 ```text

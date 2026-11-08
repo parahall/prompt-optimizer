@@ -38,7 +38,7 @@ all possible exceptions, then decide which tool to call, then call the tool,
 then explain the entire process to the user.
 ```
 
-- **Output schema definitions in the prompt**: use Structured Outputs instead.
+- **Output schema definitions in the prompt**, "where possible": use Structured Outputs instead. Delete the prose schema only when the app sends an equivalent schema in the request; otherwise keep it and recommend the change (see `audit-checklist.md`, item 9).
 - **The current date**: the model already knows the UTC date. Keep a date only for a business timezone, policy-effective date, user-local date, or other non-UTC reference.
 - **Unnecessary absolute rules** (ALWAYS, NEVER, must, only) for judgment calls; keep them for true invariants and use decision rules otherwise.
 - **Tool-specific guidance in the system prompt** that belongs in the tool's own description (what it does, when to use it, inputs, side effects, retry safety, errors).
@@ -68,6 +68,7 @@ Before any tool calls for a multi-step task, send a short user-visible update th
 ```
 
 ### The prompt scripts every step instead of stating the goal
+Example of the pattern; adapt the task and the output fields to the user's prompt, do not copy them:
 
 > Quoted from OpenAI · "Using GPT-5.5" · "Outcome-first prompts and stopping conditions"
 ```text
