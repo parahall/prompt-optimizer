@@ -57,7 +57,7 @@ def check_coverage(provider: str, ref: Path, sources: str) -> int:
                 failures += 1
                 print(f"MISSING MODEL FILE  anthropic/models/{slug}.md")
         cache = ROOT / "docs-cache/anthropic"
-        guide = next(cache.glob("*claude-prompting-best-practices.md")).read_text()
+        guide = (cache / "prompt-engineering_claude-prompting-best-practices.md").read_text()  # the name refresh-docs.sh gives the current guide
         for slug in sorted(set(re.findall(r"prompting-claude-([a-z0-9-]+)\)", guide))):
             if f"prompting-claude-{slug}.md" not in sources:
                 failures += 1
