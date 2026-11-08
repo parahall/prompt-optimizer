@@ -132,7 +132,7 @@ Run tests appropriate to the change and complete required checks. Once those pas
 - Preserve the current effective effort when migrating; Astra and 6.1 Sol do not accept `none` (use `low`); if the old request used `minimal`, start with `low`.
 - Tool calling: use the Responses API. GPT-6 Sol and Luna allow Chat Completions function calling only with effort `none`.
 - When effort is not `none`: remove `temperature`, `top_p`, `top_logprobs` (and `logprobs` in Chat Completions).
-- Changing effort between responses: use `configuration_update` items and keep the request-level effort fixed, to keep the prompt cache.
+- Changing effort between responses: use `configuration_update` items and keep the request-level effort fixed, to keep the prompt cache. Only in standard, single-agent requests; not together with automatic compaction or truncation (see `api-settings.md`).
 - From GPT-5.5 or earlier: replace `prompt_cache_retention` with `prompt_cache_options.ttl` (`"30m"`).
 
 ## Known traps

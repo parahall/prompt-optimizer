@@ -63,13 +63,47 @@ def check_coverage(provider: str, ref: Path, sources: str) -> int:
                 failures += 1
                 print(f"GUIDE LISTS A MODEL PAGE NOT IN tools/sources/anthropic.txt: {slug}")
     elif provider == "openai":
-        # Every "Using GPT-X" page must be covered: its family name appears in a model file.
+        # Every "Using GPT-X" page must map to a model file whose title names that family.
+        # Families without their own file belong in legacy.md. A new family in the docs
+        # fails this check until it is added here and to a file.
+        family_files = {
+            "gpt-6-astra": "gpt-6.md",  # the GPT-6 page is named after Astra but covers the family
+            "gpt-5.6": "gpt-5-6.md",
+            "gpt-5.5": "gpt-5-5.md",
+            "gpt-5.4": "gpt-5-4.md",
+            "gpt-5.3-codex": "legacy.md",
+            "gpt-5.2": "legacy.md",
+            "gpt-5.1": "legacy.md",
+            "gpt-5": "legacy.md",
+            "gpt-4.1": "legacy.md",
+        }
         for slug in re.findall(r"/latest-model/([a-z0-9.-]+)\.md", sources):
-            family = slug.replace("-astra", "")  # the GPT-6 page is named after Astra but covers the family
-            if family not in models_text:
+            if slug not in family_files:
                 failures += 1
-                print(f"OPENAI FAMILY NOT COVERED BY ANY MODEL FILE: {family}")
+                print(f"NEW OPENAI FAMILY IN THE SOURCE LIST, NOT MAPPED TO A MODEL FILE: {slug}")
+                continue
+            path = ref / "models" / family_files[slug]
+            family = slug.replace("-astra", "").upper()
+            title = path.read_text().splitlines()[0].upper() if path.exists() else ""
+            if family not in title:
+                failures += 1
+                print(f"OPENAI FAMILY {family} NOT NAMED IN THE TITLE OF models/{family_files[slug]}")
     return failures
+
+
+def cache_corpus(provider: str, sources: str) -> str:
+    """Text of the cached pages that are on the current source list only, so pages
+    dropped from the list (or left over from an older naming scheme) cannot vouch for a quote."""
+    cache = ROOT / "docs-cache" / provider
+    texts = []
+    for url in re.findall(r"^\s*(https://\S+)", sources, re.M):
+        parts = url.rstrip("/").split("/")
+        path = cache / f"{parts[-2]}_{parts[-1]}"
+        if path.exists():
+            texts.append(path.read_text())
+        else:
+            print(f"NOT DOWNLOADED (run tools/refresh-docs.sh): {url}")
+    return norm("\n".join(texts))
 
 
 def main() -> int:
@@ -83,7 +117,8 @@ def main() -> int:
         if not cache.exists():
             print(f"docs-cache/{provider} is missing; run tools/refresh-docs.sh first")
             return 1
-        corpus = norm("\n".join(p.read_text() for p in cache.glob("*.md")))
+        sources = (ROOT / f"tools/sources/{provider}.txt").read_text()
+        corpus = cache_corpus(provider, sources)
 
         count = 0
         for path in sorted(ref.rglob("*.md")):
@@ -94,7 +129,6 @@ def main() -> int:
                     print(f"QUOTE NOT FOUND  {path.relative_to(ROOT)}:{line}  {norm(block)[:80]}...")
         print(f"{provider}: checked {count} quoted blocks")
 
-        sources = (ROOT / f"tools/sources/{provider}.txt").read_text()
         failures += check_coverage(provider, ref, sources)
 
         if network:

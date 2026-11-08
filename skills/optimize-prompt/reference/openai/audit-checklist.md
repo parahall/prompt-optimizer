@@ -79,7 +79,7 @@ Sources: GPT-5.6 prompting page, "Simplify prompts first"; Using GPT-5, "Instruc
 ## 7. Formatting defaults
 
 - GPT-6 and GPT-5.4: lean on lists, tables, Markdown. If the product wants prose, add the paragraph rule in `models/gpt-6.md` or flatten lists with the rule in `models/gpt-5-4.md`.
-- GPT-5.5: defaults to paragraphs; its formatting block uses lists sparingly.
+- GPT-5.5: the docs give a recommended formatting block that makes paragraphs the default and uses lists sparingly (in `models/gpt-5-5.md`); they do not say the model writes paragraphs without being told.
 - A prompt written in heavy Markdown tends to get Markdown back.
 
 ## 8. Asking, approval, and autonomy rules

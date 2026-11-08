@@ -15,11 +15,11 @@ Contents
 
 - **Reasoning effort** (`reasoning.effort` in the Responses API, `reasoning_effort` in Chat Completions): `none`, `minimal`, `low`, `medium`, `high`, `xhigh`, `max`; which values exist depends on the model. OpenAI calls it a "last-mile knob": fix the prompt first (success criteria, stop rules, verification), then change effort one step at a time.
 - **Verbosity** (`text.verbosity`): `low`, `medium` (default), `high`. Sets the default length of the visible answer, not the thinking. Task-specific length rules in the prompt still apply on top.
-- **Reasoning mode** (`reasoning.mode: "pro"`, GPT-5.6 and GPT-6, Responses API only): more model work for one final answer; costs more and is slower. Independent of effort. Do not ask for it in the prompt ("think harder", "generate several candidates").
+- **Reasoning mode** (`reasoning.mode: "pro"`, GPT-5.6 and GPT-6, Responses API only): more model work for one final answer; costs more and is slower. Chosen separately from effort. The docs disagree on which efforts Pro accepts: the GPT-5.6 upgrade guide says "supported Pro efforts begin at `medium`", while the GPT-5.6 model guide says Pro works with any supported effort. Recommend `medium` or higher with Pro and say the docs disagree. Do not ask for it in the prompt ("think harder", "generate several candidates").
 - **Persisted reasoning** (`reasoning.context`: `auto`, `current_turn`, `all_turns`): whether reasoning from earlier turns stays available. GPT-5.6 defaults to `all_turns`; earlier models to `current_turn`.
 - **`phase`** on assistant messages (`commentary` for progress updates, `final_answer` for the answer), GPT-5.3-Codex and later in the Responses API. Required for GPT-5.3-Codex, highly recommended for later models when the app replays history itself. Never on user messages.
-- **`configuration_update`** input item (GPT-6): changes effort mid-conversation without breaking the prompt cache.
-- **Prompt caching**: `prompt_cache_key`; on GPT-5.6 and GPT-6, `prompt_cache_options` (`mode`, `ttl`) replaces `prompt_cache_retention`. Cache writes cost 1.25× uncached input on GPT-5.6 and GPT-6.
+- **`configuration_update`** input item (supported GPT-6 and later models): changes effort (and `text.format`) mid-conversation without breaking the prompt cache. Limits: standard, single-agent mode only; do not combine with automatic compaction or automatic truncation; `/responses/compact` rejects histories that contain it; after an explicit compaction, send a fresh update. Mention these limits whenever you recommend it.
+- **Prompt caching**: `prompt_cache_key`; on GPT-5.6 and GPT-6, `prompt_cache_options` (`mode`, `ttl`) replaces `prompt_cache_retention`. Cache writes cost more than uncached input: 1.25× at 30-minute retention on GPT-5.6 and GPT-6, more with longer retention (GPT-6.1 Terra lists $1.25 per million tokens for 30-minute and $2.50 for 12-hour retention against $1 input). Check the model's catalog page for exact prices.
 
 ## 2. Per-model table
 
@@ -70,14 +70,14 @@ Report any of these found in the user's code or described setup:
 - Effort `none` on GPT-6 Astra or GPT-6.1 Sol: HTTP 400; use `low`. Effort `none` on GPT-5.3-Codex: not supported.
 - Effort `minimal` on GPT-6 models: start with `low` instead.
 - Function tools in Chat Completions on GPT-6 Astra or GPT-6.1 Sol: not supported; on GPT-5.6, GPT-6 Sol, and GPT-6 Luna only with effort `none`.
-- Moving from GPT-5.4, Mini, or Nano (default `none`) to GPT-5.6 or GPT-6 (default `medium`) with effort omitted: requests silently become slower and more expensive, and Chat Completions function tools stop working. Set the old effort explicitly.
+- Moving from GPT-5.4, Mini, or Nano (default `none`) to GPT-5.6 or GPT-6 (default `medium`) with effort omitted: requests silently become slower and more expensive, and Chat Completions function tools stop working. Set the old effort explicitly where the new model supports it; GPT-6 Astra and GPT-6.1 Sol reject `none`, so use `low` there and compare.
 - `prompt_cache_retention` on GPT-5.6 and GPT-6: replace with `prompt_cache_options.ttl`.
 - A separate "Pro" model name for GPT-5.6: there is none; use `reasoning.mode: "pro"` on the same model.
 
 ## 5. Rules that affect how the prompt may change
 
 - **Keep reusable prefixes stable.** Put static instructions first and per-request content last; avoid timestamps, request IDs, or changing tool lists near the top of a large system prompt. GPT-5.6 places its cache breakpoint near the latest message, so a stable prefix followed by a changing suffix can lose cache hits.
-- **Do not edit earlier turns.** On newer models, changing history before a reasoning item can make the API drop that reasoning. Change effort with `configuration_update` (GPT-6), not by changing the request-level value.
+- **Do not edit earlier turns.** On newer models, changing history before a reasoning item can make the API drop that reasoning. Change effort with `configuration_update` (GPT-6, with the limits in section 1), not by changing the request-level value.
 - **Preserve `phase` values** when the app replays assistant messages itself; dropped `phase` can make progress updates count as final answers.
 - **JSON shapes described in prose**: recommend Structured Outputs (`text.format` with a JSON schema) instead, at least for GPT-5.5 and later. Keep a short description of fields only where the schema cannot express a rule.
 - **`instructions` parameter**: applies only to the current request; with `previous_response_id`, send it again on every call.
