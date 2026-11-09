@@ -68,6 +68,15 @@ In Claude Code:
 
 Run it with `/prompt-optimizer:optimize-prompt`, or just ask Claude to optimize a prompt for a named model.
 
+### Updating the plugin
+
+The plugin has no fixed version number, so every change merged to `main` counts as a new version. Claude Code does not update plugins from this marketplace automatically unless you turn it on:
+
+- **Automatic:** run `/plugin`, open the Marketplaces tab, select `prompt-optimizer`, and choose "Enable auto-update". Claude Code then checks for updates in the background during your sessions.
+- **Manual:** run `claude plugin update prompt-optimizer@prompt-optimizer`, or choose "Update now" for the plugin in `/plugin`.
+
+A running session keeps the version it started with. Run `/reload-plugins` or start a new session to use the update.
+
 ### As a personal skill from a clone
 
 ```bash
