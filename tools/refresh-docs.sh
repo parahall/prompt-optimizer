@@ -20,6 +20,8 @@ failed=0
 for provider in "${providers[@]}"; do
   list="$root/tools/sources/$provider.txt"
   [ -f "$list" ] || { echo "No source list: $list" >&2; exit 1; }
+  # Read the list here, not in the loop's input, so a read failure stops the script.
+  urls="$(grep -vE '^\s*(#|$)' "$list")" || { echo "Cannot read URLs from: $list" >&2; exit 1; }
   dir="$root/docs-cache/$provider"
   mkdir -p "$dir"
   while read -r url; do
@@ -38,7 +40,7 @@ for provider in "${providers[@]}"; do
       echo "CHANGED $provider/$name"
       diff -u "$dir/$name.prev" "$dir/$name" | head -200 || true
     fi
-  done < <(grep -vE '^\s*(#|$)' "$list")
+  done <<< "$urls"
 done
 
 if [ "$failed" -gt 0 ]; then

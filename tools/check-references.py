@@ -57,7 +57,11 @@ def check_coverage(provider: str, ref: Path, sources: str) -> int:
                 failures += 1
                 print(f"MISSING MODEL FILE  anthropic/models/{slug}.md")
         cache = ROOT / "docs-cache/anthropic"
-        guide = (cache / "prompt-engineering_claude-prompting-best-practices.md").read_text()  # the name refresh-docs.sh gives the current guide
+        guide_path = cache / "prompt-engineering_claude-prompting-best-practices.md"  # the name refresh-docs.sh gives the current guide
+        if not guide_path.exists():
+            print(f"GUIDE NOT DOWNLOADED (run tools/refresh-docs.sh): {guide_path.name}")
+            return failures + 1
+        guide = guide_path.read_text()
         for slug in sorted(set(re.findall(r"prompting-claude-([a-z0-9-]+)\)", guide))):
             if f"prompting-claude-{slug}.md" not in sources:
                 failures += 1
@@ -126,7 +130,7 @@ def main() -> int:
         for path in sorted(ref.rglob("*.md")):
             for line, block in quoted_blocks(path, info["name"]):
                 count += 1
-                if norm(block) not in corpus:
+                if not norm(block) or norm(block) not in corpus:  # an empty block means the code fence is missing
                     failures += 1
                     print(f"QUOTE NOT FOUND  {path.relative_to(ROOT)}:{line}  {norm(block)[:80]}...")
         print(f"{provider}: checked {count} quoted blocks")
