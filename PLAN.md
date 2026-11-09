@@ -99,7 +99,7 @@ This is the workflow that `SKILL.md` will describe.
 ```
 prompt-optimizer/
 ├── .claude-plugin/
-│   ├── plugin.json            # the plugin's ID card: name, description, version, author
+│   ├── plugin.json            # the plugin's ID card: name, description, author. No version on purpose: Claude Code then uses the git commit, so every merge to main reaches users who update
 │   └── marketplace.json       # makes this repo installable with /plugin marketplace add
 ├── skills/
 │   └── optimize-prompt/
@@ -283,7 +283,7 @@ Expected test cost: about $20–30, similar to the Claude phase.
 
 ## 10. Open questions for you
 
-The repository is parahall/prompt-optimizer (private). None open at the moment.
+The repository is parahall/prompt-optimizer (public). None open at the moment.
 
 ## 11. Progress of the OpenAI phase (2026-11-08)
 
