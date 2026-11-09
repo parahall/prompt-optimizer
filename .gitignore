@@ -4,3 +4,4 @@ docs-cache/
 evals/results/
 .DS_Store
 .idea/
+__pycache__/

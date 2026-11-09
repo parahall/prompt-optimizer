@@ -17,10 +17,11 @@ Symptoms covered:
 - Agent loops issue one independent tool call per turn
 - Long deliverables at `xhigh`/`max` take very long or hit `max_tokens`
 - Client-side compaction summaries drop details
+- The lead agent sits idle while subagents run
 
 ## How it differs from Fable 5
 
-- Fable 5 prompts work without changes; the Fable 5 file still applies. The items below are the differences.
+- Fable 5 prompts work without changes. The page does not say Fable 5's advice still applies, so this file does not inherit it; do not load `fable-5.md`. The items below are the differences.
 - **Writes fewer user-facing updates** during long tool-calling turns, more so at higher effort.
 - **Formats less**: less bold, fewer headers, lists, and quotation marks.
 - Prose has few stock phrases but can be **dense**: long sentences, few paragraph breaks.
@@ -141,6 +142,9 @@ Instead, when the person has asked for a long or effort-intensive deliverable su
 
 ### Client-side compaction summaries drop details
 The page gives a full summarization instruction ("Tell the model what to preserve in compaction summaries"); use it for the summarizer prompt, not the main system prompt.
+
+### The lead agent sits idle while subagents run
+Harness changes, not prompt text; report them with the settings. Have the tool that starts a subagent return immediately, pass each subagent's result back to the lead in a later `user` message when it is ready, and give the lead a separate tool to wait for a result. On coding tasks this lowered average time to completion at similar quality and cost; the model still often waits. ("Let the lead agent keep working while subagents run")
 
 ## API settings
 

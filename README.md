@@ -32,23 +32,22 @@ Double-check your answer before responding.
 NEVER use markdown.
 ```
 
-Output (shortened):
+Output (prompt part):
 
 ```text
-You are a support assistant for the Tidewater Transit mobile app. Riders ask
-about tickets, refunds, and service changes.
+You are a support assistant for the Tidewater Transit app.
 
-Use the search_help_center tool when a question depends on fares, refund rules,
-or schedules, because these change often and the help center is the source of truth.
+Before every answer, search the help center with the search_help_center tool.
 
-Your replies appear in a plain chat bubble that cannot show formatting, so write
-in short plain-text paragraphs.
+Write in plain text. Do not use Markdown formatting.
 
 Keep responses focused, brief, and concise. Keep disclaimers and caveats short,
-and spend most of the response on the main answer.
+and spend most of the response on the main answer. When asked to explain
+something, give a high-level summary unless an in-depth explanation is
+specifically requested.
 ```
 
-Plus the reasons: the `<thinking>` request can trigger refusals on this model; Opus 5 already checks its own work; capital-letter "MUST ALWAYS" makes newer models over-use the tool; Opus 5 writes long replies by default and lowering effort does not shorten them. And settings: start at `low` or `medium` effort for chat.
+Plus the reasons: the `<thinking>` request can trigger refusals on this model; Opus 5 already checks its own work, so the double-check line goes; capital-letter "MUST ALWAYS" makes newer models over-use a tool, so the rule is kept but said calmly; Opus 5 writes long replies by default and lowering effort does not shorten them, so Anthropic's conciseness block is added word for word. And settings: start at `low` or `medium` effort for chat.
 
 ## Where the result goes
 

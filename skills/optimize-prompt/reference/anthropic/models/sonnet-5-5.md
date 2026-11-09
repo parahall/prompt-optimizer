@@ -85,7 +85,7 @@ Use the search tool to check specifics that may have changed since your training
 Use "Run a real check before reporting code done" in `snippets.md`.
 
 ### Long agentic turns look silent
-First set `display: "updates"`. Then remove suppression rules; if predictable updates are wanted, say when in the system prompt. Harness reminder after about five silent tool steps, sent as a turn-scoped system message and stopped after two or three:
+First, with adaptive thinking, set `display: "updates"`. With `between_tools`, the notes already come back with their summary text, and sending `display` returns a 400 error. Then remove suppression rules; if predictable updates are wanted, say when in the system prompt. Harness reminder after about five silent tool steps, sent as a turn-scoped system message and stopped after two or three:
 
 > Quoted from Anthropic · "User-facing progress updates"
 ```text

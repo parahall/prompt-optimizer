@@ -45,7 +45,7 @@ Sources: GPT-5.6 prompting page, "Simplify prompts first"; Using GPT-5, "Instruc
 **Spot it:** "First do A, then B, then compare every field, then…" for a task where only the result matters.
 
 **Verdict:**
-- GPT-6, GPT-5.6, GPT-5.5: **rewrite as outcome + success criteria + stop rules** (see the "Resolve the customer's issue end to end" block in `models/gpt-5-6.md` or `models/gpt-5-5.md`). Keep a fixed order only where the exact path is a real requirement (safety steps, required lookups before an action).
+- GPT-6, GPT-5.6, GPT-5.5: **rewrite as outcome + success criteria + stop rules** (GPT-5.6 and GPT-5.5: use the "Resolve the customer's issue end to end" block in their model file; GPT-6 has no such block, so write the outcome, success criteria, and stop rules in your own words). Keep a fixed order only where the exact path is a real requirement (safety steps, required lookups before an action).
 - GPT-5.4 Mini and Nano: **keep or add** the full execution order when tools or side effects matter; this model is literal and weak at implied steps.
 - GPT-4.1: an ordered list of workflow steps is the recommended pattern.
 

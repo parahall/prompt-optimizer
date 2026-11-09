@@ -161,6 +161,16 @@ After making changes, run the most relevant validation available:
 If validation cannot be run, explain why and describe the next best check.
 ```
 
+For visual artifacts:
+
+> Quoted from OpenAI · "Using GPT-5.5" · "Prompt the model to check its work"
+```text
+Render the artifact before finalizing. Inspect the rendered output for layout, clipping, spacing, missing content, and visual consistency. Revise until the rendered output matches the requirements.
+```
+
+### Frontend work looks generic or breaks common UI expectations
+The GPT-5.5 page points to OpenAI's frontend instructions ("Frontend engineering and visual taste"). Use the "Frontend instructions" block in `snippets.md`.
+
 ## Suggested structure for complex prompts
 
 > Quoted from OpenAI · "Using GPT-5.5" · "Suggested prompt structure"

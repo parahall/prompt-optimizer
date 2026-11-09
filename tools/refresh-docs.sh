@@ -31,6 +31,9 @@ for provider in "${providers[@]}"; do
     if ! curl -fsSL "$url" -o "$tmp"; then
       echo "FAILED  $url"; rm -f "$tmp"; failed=$((failed + 1)); continue
     fi
+    if [ ! -s "$tmp" ]; then
+      echo "FAILED  $url (empty response)"; rm -f "$tmp"; failed=$((failed + 1)); continue
+    fi
     if [ ! -f "$dir/$name" ]; then
       mv "$tmp" "$dir/$name"; echo "NEW     $provider/$name"
     elif cmp -s "$tmp" "$dir/$name"; then
