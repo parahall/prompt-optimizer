@@ -14,7 +14,7 @@ Symptoms covered:
 - Code reported as done without a test or build run (especially at `low`)
 - Long agentic turns look silent
 - Mid-task user messages are ignored or treated as injected text
-- Inherited from Sonnet 5: a rule should apply broadly; replies are too long; shallow reasoning at `low` effort that must stay low; warmer voice needed; code review reports too few bugs; frontend output always looks the same
+- Inherited from Sonnet 5: a rule should apply broadly; replies are too long; shallow reasoning at `low` effort that must stay low; warmer voice needed; code review reports too few bugs; computer use screenshot resolution; frontend output always looks the same
 
 ## How it differs from Sonnet 5
 
@@ -130,6 +130,9 @@ Use a warm, collaborative tone. Acknowledge the user's framing before answering.
 
 ### Code review reports too few bugs
 Use "Report every issue" in `snippets.md`.
+
+### Computer use costs too much, or screenshot resolution is unclear
+Sonnet 5 testing found 1080p screenshots a good balance of performance and cost; 720p or 1366×768 are lower-cost options with strong performance. Treat these as starting points and test them. ("Computer use")
 
 ### Frontend output always looks the same
 Give a concrete spec (palette hex values, type, layout, radius), or:

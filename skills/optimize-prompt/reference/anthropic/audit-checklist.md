@@ -42,7 +42,7 @@ Sources: [Refusals: keep reasoning in thinking blocks](https://platform.claude.c
 **Spot it:** "double-check your answer", "re-verify before responding", "include a final verification step", "use a subagent to verify your work", harness steps that add a separate check.
 
 **Verdict:**
-- Opus 5: **remove, do not rewrite.** It verifies on its own; these lines cause over-verification and cost tokens with no quality gain. Same for "double-check" style self-correction requests.
+- Opus 5, and Opus 5.5 (inherited from Opus 5): **remove, do not rewrite.** It verifies on its own; these lines cause over-verification and cost tokens with no quality gain. Same for "double-check" style self-correction requests.
 - Sonnet 5.5 and Haiku 5.5 **coding agents**: at low effort (Haiku also at medium) they sometimes report a change as done without running a check. If the prompt is for a coding agent, a specific verification paragraph helps; see `snippets.md`, "Run a real check before reporting code done". Vague "double-check" lines do not do this job.
 - Sonnet 5.5 at `xhigh`/`max`: it starts its own review rounds; if that is unwanted, use the "stop when checks pass" block in `models/sonnet-5-5.md`.
 - Other current models: a short self-check against stated criteria ("Before you finish, verify your answer against [criteria]") is recommended for coding and math.
@@ -96,6 +96,7 @@ Source: best practices, "Control the format of responses"; [Fable 5.1: formattin
 ## 7. Length and verbosity
 
 - Opus 5: replies run long by default and lowering effort does not shorten them. If the output is user-facing and no length guidance exists, **add** the conciseness block from `models/opus-5.md`. Files it writes are also long; add the document-length line if the product has written deliverables.
+- Opus 5.5: uses fewer tokens than Opus 5; add the inherited conciseness block from `models/opus-5-5.md` only when replies are reported or clearly likely to be too long.
 - Opus 4.8, Sonnet 5: length follows task complexity; add a conciseness line only if the product needs a fixed style. Positive examples of the right length work better than "do not" lists.
 - Fable 5 and Fable 5.1: brevity and readability are steered by one short instruction; long lists of banned habits are unnecessary.
 
@@ -103,7 +104,7 @@ Source: best practices, "Control the format of responses"; [Fable 5.1: formattin
 
 **Spot it:** "only report high-severity issues", "be conservative", "don't nitpick", "only important bugs".
 
-**Verdict:** Opus 4.8, Sonnet 5, Opus 5 follow these literally and report fewer real bugs (lower recall). **Replace** with the coverage block in `snippets.md` ("Report every issue you find..."), or, for a single pass, a concrete threshold ("report any bug that could cause incorrect behavior, a test failure, or a misleading result; omit only pure style or naming nits"). Apply the same reasoning on other current models; the risk is documented for those three.
+**Verdict:** Opus 4.8, Sonnet 5, Opus 5 (and Opus 5.5 and Sonnet 5.5, which inherit this) follow these literally and report fewer real bugs (lower recall). **Replace** with the coverage block in `snippets.md` ("Report every issue you find..."), or, for a single pass, a concrete threshold ("report any bug that could cause incorrect behavior, a test failure, or a misleading result; omit only pure style or naming nits"). Apply the same reasoning on other current models; the risk is documented for those three.
 
 Sources: [Opus 4.8: code review harnesses](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-4-8#code-review-harnesses); [Opus 5: capability improvements](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5#capability-improvements).
 
@@ -123,12 +124,12 @@ Sources: [Opus 4.8: code review harnesses](https://platform.claude.com/docs/en/b
 
 ## 11. Scope that relies on the model to generalize
 
-Opus 4.8 and Sonnet 5 follow instructions literally, especially at low effort, and do not stretch a rule from one item to others. If a rule should apply broadly, say so ("Apply this formatting to every section, not just the first one").
+Opus 4.8 and Sonnet 5 (and Sonnet 5.5, which inherits this) follow instructions literally, especially at low effort, and do not stretch a rule from one item to others. If a rule should apply broadly, say so ("Apply this formatting to every section, not just the first one").
 
 ## 12. Scope creep and over-engineering
 
 Symptom-driven: add a scope block only for coding or task agents where unrequested extras would hurt.
-- Opus 5: scope block in `models/opus-5.md`.
+- Opus 5: scope block in `models/opus-5.md`. Opus 5.5: the same block, inherited, in `models/opus-5-5.md`.
 - Fable 5: "don't add features, refactor..." block in `models/fable-5.md`.
 - Fable 5.1: "keep changes and tests to what the task asks for" block in `models/fable-5-1.md`.
 - Sonnet 5.5, Haiku 5.5: the "when the work is done and checked, stop and report" paragraph in their files.
@@ -136,7 +137,7 @@ Symptom-driven: add a scope block only for coding or task agents where unrequest
 
 ## 13. Subagent rules
 
-- Opus 5 delegates readily. "Use subagents for everything" multiplies cost; add the damping block from `models/opus-5.md` for cost-sensitive harnesses.
+- Opus 5 delegates readily. "Use subagents for everything" multiplies cost; add the damping block from `models/opus-5.md` for cost-sensitive harnesses (for Opus 5.5, the inherited copy in `models/opus-5-5.md`).
 - Fable 5 also dispatches subagents readily, but its docs recommend using them, with guidance on when ("Parallel subagents" in `models/fable-5.md`), and recommend fresh-context verifier subagents for long runs. Do not copy Opus 5's block into a Fable 5 prompt: its "do not use subagents to verify" line contradicts Fable 5's guidance.
 - Opus 4.8 spawns fewer subagents by default; add explicit "when to spawn" guidance only if more delegation is wanted.
 - Never tell a model to use subagents to verify its own work on Opus 5.

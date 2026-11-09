@@ -111,7 +111,7 @@ hallucination-free answers.
 
 ## 5. Run a real check before reporting code done
 
-Use when: a coding agent on Sonnet 5.5 (at `low` effort) or Haiku 5.5 (at `low` or `medium`) reports changes as done without test or build output. Not for Opus 5, which verifies on its own. The same text appears on both pages.
+Use when: a coding agent on Sonnet 5.5 (at `low` effort) or Haiku 5.5 (at `low` or `medium`) reports changes as done without test or build output. Not for Opus 5 or Opus 5.5, which verify on their own. The same text appears on both pages.
 
 > Quoted from Anthropic · S55 · "Verification on coding tasks" (identical in H55 · "Tell coding agents to verify their changes")
 ```text
@@ -137,7 +137,7 @@ When the work the user asked for is done and checked, stop and report. Don't add
 
 ## 7. Report every issue in code review
 
-Use when: a review prompt filters by severity or confidence ("only high-severity", "be conservative"). Documented for Opus 4.8 and Sonnet 5; Opus 5 has the same literal-filter behavior.
+Use when: a review prompt filters by severity or confidence ("only high-severity", "be conservative"). Documented for Opus 4.8 and Sonnet 5; Opus 5 has the same literal-filter behavior, and Opus 5.5 and Sonnet 5.5 inherit it.
 
 > Quoted from Anthropic · O48 · "Code review harnesses"
 ```text
