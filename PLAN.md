@@ -193,7 +193,7 @@ Gemini follows later with the same steps.
 
 ### 8.1 What OpenAI publishes
 
-All pages are on developers.openai.com and, like Anthropic's, have a plain Markdown copy when `.md` is added to the address. The list is in `tools/sources/openai.txt` (51 pages, downloaded and read).
+All pages are on developers.openai.com and, like Anthropic's, have a plain Markdown copy when `.md` is added to the address. The list is in `tools/sources/openai.txt` (37 pages, downloaded and read).
 
 - **One "Using GPT-X" page per model family**: what's new, prompting best practices, migration. Families: GPT-6, GPT-5.6, 5.5, 5.4, 5.3-Codex, 5.2, 5.1, 5, 4.1.
 - **Extra pages for some families**: "Prompting guidance for GPT-5.6 Sol" (the most detailed page), "Upgrading to GPT-5.4 / 5.5 / 5.6 Sol", a front-end prompt page written for GPT-5.5, and older cookbook prompting guides (GPT-5, 5.1, 5.2, 4.1, Codex). The cookbook guides for GPT-5 and 5.1 are marked "archived".
@@ -288,7 +288,7 @@ The repository is parahall/prompt-optimizer (private). None open at the moment.
 ## 11. Progress of the OpenAI phase (2026-11-08)
 
 - Built as planned in section 8, with one file per model family (approved by the user).
-- `python3 tools/check-references.py` passes for both providers: 82 Anthropic and 53 OpenAI quoted blocks match the docs word for word, every OpenAI model family in the source list is covered, and all 32 links work.
+- `python3 tools/check-references.py` passes for both providers: all quoted blocks match the docs word for word (98 Anthropic and 55 OpenAI as of 2026-11-09), every OpenAI model family in the source list is covered, and all 32 links work.
 - The refresh script had a bug found during this phase: pages with the same final name overwrote each other (the GPT-6 guide and the GPT-6 Astra catalog page). Files are now named by the last two parts of the address.
 - Tests (26 cases, one run each unless noted):
   - Default model, with and without the skill: all 26 pass with the skill. Without it, every case except the two unknown-model cases scores lower; the average difference is +0.71. Without the skill, the model gets GPT-6 settings wrong (GPT-6 is newer than its knowledge).

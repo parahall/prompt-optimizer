@@ -1,5 +1,5 @@
 ---
 type: regex
 target: last_message
-pattern: "crash, ui, performance, account, other"
+pattern: "crash`?[\\s,|/]+`?ui`?[\\s,|/]+`?performance`?[\\s,|/]+`?account`?[\\s,|/]+(or\\s+)?`?other"
 ---

@@ -21,6 +21,7 @@ Contents
 14. Generic design instructions
 15. Prefill and other removed features
 16. Phrasings that trigger safety false positives
+17. Medicine dosing questions
 
 ---
 
@@ -156,3 +157,11 @@ Symptom-driven: add a scope block only for coding or task agents where unrequest
 Fable 5.1: "Does this program compile without errors?" triggers more false refusals than "Are there any bugs in this program?". For a little-known programming language, add a short description of the language. Tools that return base64 data into context also raise false positives.
 
 Source: [Fable 5.1: reduce safeguard false positives](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1#reduce-safeguard-false-positives).
+
+## 17. Medicine dosing questions
+
+**Spot it:** the application could be asked about medicine doses: a health, pharmacy, or parenting product, or a general consumer assistant, whether or not the prompt mentions medicine.
+
+**Verdict:** all models with a block: **add** the matching "Medicine dosing" block from `snippets.md`, word for word, even if nothing else changes. Haiku 5.5 has its own block (it adds a rule about emotional distress); Sonnet 4.6 and Haiku 4.5 have their own. If the application clearly cannot be asked about medicine (for example a code reviewer), skip it.
+
+Source: [Best practices: medication dosing](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#medication-dosing).

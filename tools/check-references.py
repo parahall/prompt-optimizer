@@ -37,8 +37,10 @@ def quoted_blocks(path: Path, name: str):
     while i < len(lines):
         if lines[i].startswith(marker):
             j = i + 1
-            while j < len(lines) and not lines[j].startswith("```"):
-                j += 1
+            if j >= len(lines) or not lines[j].startswith("```"):
+                yield i + 1, ""  # the block must start on the next line; an empty block is reported as missing
+                i += 1
+                continue
             start = j + 1
             k = start
             while k < len(lines) and not lines[k].startswith("```"):
@@ -92,6 +94,13 @@ def check_coverage(provider: str, ref: Path, sources: str) -> int:
             if family not in title:
                 failures += 1
                 print(f"OPENAI FAMILY {family} NOT NAMED IN THE TITLE OF models/{family_files[slug]}")
+        # Every model page on the source list must be named in a reference file, so a new
+        # model added to the list fails until the skill covers it.
+        known = (models_text + (ref / "api-settings.md").read_text()).lower()
+        for model_id in re.findall(r"/models/([a-z0-9.-]+)\.md", sources):
+            if model_id not in known:
+                failures += 1
+                print(f"OPENAI MODEL {model_id} IS ON THE SOURCE LIST BUT NOT NAMED IN ANY REFERENCE FILE")
     return failures
 
 
