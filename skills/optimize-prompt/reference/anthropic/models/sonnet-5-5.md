@@ -4,7 +4,7 @@ Checked against the docs on 2026-11-08.
 Source: [Prompting Claude Sonnet 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5) (section names below refer to this page).
 API ID `claude-sonnet-5-5`. Default effort `high`. Thinking: adaptive by default; `between_tools` (no thinking before the first tool call) is its lowest setting; `disabled` is not accepted. Settings: `api-settings.md`.
 
-Contents: How it differs · Remove from prompts · Add when you see this symptom · API settings · Known traps
+Contents: How it differs · Remove from prompts · Add when you see this symptom · Inherited from Sonnet 5 · API settings · Known traps
 Symptoms covered:
 - Coding agent checks in before the work is done (`low`/`medium`), or adds unrequested extras
 - At `xhigh`/`max`, unwanted extra review rounds or reviewer subagents
@@ -14,10 +14,11 @@ Symptoms covered:
 - Code reported as done without a test or build run (especially at `low`)
 - Long agentic turns look silent
 - Mid-task user messages are ignored or treated as injected text
+- Inherited from Sonnet 5: a rule should apply broadly; replies are too long; shallow reasoning at `low` effort that must stay low; warmer voice needed; code review reports too few bugs; computer use screenshot resolution; frontend output always looks the same
 
 ## How it differs from Sonnet 5
 
-- Sonnet 5 prompts work without changes; the Sonnet 5 file is a reasonable start. For the hardest long-horizon work, an Opus model is the better choice.
+- Sonnet 5 prompts work without changes. The Sonnet 5 advice that still applies is copied below under "Inherited from Sonnet 5"; do not load `sonnet-5.md` or anything older. For the hardest long-horizon work, an Opus model is the better choice.
 - Effort levels are recalibrated: the same name gives a different amount of thinking than on Sonnet 5.
 - **Prompt wording does not reliably reduce its thinking**; lower effort instead.
 - At `low`/`medium` on long agentic tasks it may **stop to check in** before finishing; at `low` it may **skip verifying** a change.
@@ -93,6 +94,60 @@ The user hasn't heard from you in a while — say in a few words what you're doi
 
 ### Mid-task user messages are ignored or treated as injected text
 Harness rules, not prompt text: never put user text inside a `tool_result` block; append the user's words as a text block after the last `tool_result` in the same user message; keep harness notices in a separate system message; avoid per-step token countdowns in interactive sessions. ("Mid-turn user messages")
+
+## Inherited from Sonnet 5
+
+Source: [Prompting Claude Sonnet 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5). The Sonnet 5.5 page says: "Existing Claude Sonnet 5 prompts should perform well without changes, and the patterns in Prompting Claude Sonnet 5 remain a reasonable starting point." These are the Sonnet 5 patterns that the Sonnet 5.5 page does not replace or contradict. Use them on symptom only. Left out on purpose: wording to reduce thinking (the Sonnet 5.5 page says wording does not reliably reduce it), advice for thinking disabled (Sonnet 5.5 cannot turn thinking off), forced status scaffolding (Sonnet 5.5 has its own progress-update advice above), `temperature` rules (not documented for Sonnet 5.5), and Sonnet 5's effort settings.
+
+Remove from prompts:
+- **Severity filters in review prompts**. ("Code review harnesses")
+- **Generic design instructions** ("make it clean and minimal"). ("Design and frontend defaults")
+
+### A rule should apply broadly
+Sonnet 5 follows instructions literally and does not generalize a rule from one item to others. State the scope explicitly, for example "Apply this formatting to every section, not just the first one." ("More literal instruction following")
+
+### Replies are too long
+
+> Quoted from Anthropic · Sonnet 5 · "Response length and verbosity"
+```text
+Provide concise, focused responses. Skip non-essential context, and keep examples minimal.
+```
+
+### Shallow reasoning at `low` effort that must stay low
+Raise effort first; otherwise:
+
+> Quoted from Anthropic · Sonnet 5 · "Calibrating effort and thinking depth"
+```text
+This task involves multistep reasoning. Think carefully through the problem before responding.
+```
+
+### Warmer voice needed
+
+> Quoted from Anthropic · Sonnet 5 · "Tone and writing style"
+```text
+Use a warm, collaborative tone. Acknowledge the user's framing before answering.
+```
+
+### Code review reports too few bugs
+Use "Report every issue" in `snippets.md`.
+
+### Computer use costs too much, or screenshot resolution is unclear
+Sonnet 5 testing found 1080p screenshots a good balance of performance and cost; 720p or 1366×768 are lower-cost options with strong performance. Treat these as starting points and test them. ("Computer use")
+
+### Frontend output always looks the same
+Give a concrete spec (palette hex values, type, layout, radius), or:
+
+> Quoted from Anthropic · Sonnet 5 · "Design and frontend defaults"
+```text
+Before building, propose 4 distinct visual directions tailored to this brief (each as: bg hex / accent hex / typeface, plus a one-line rationale). Ask the user to pick one, then implement only that direction.
+```
+
+> Quoted from Anthropic · Sonnet 5 · "Design and frontend defaults"
+```text
+<frontend_aesthetics>
+NEVER use generic AI-generated aesthetics like overused font families (Inter, Roboto, Arial, system fonts), cliched color schemes (particularly purple gradients on white or dark backgrounds), predictable layouts and component patterns, and cookie-cutter design that lacks context-specific character. Use unique fonts, cohesive colors and themes, and animations for effects and micro-interactions.
+</frontend_aesthetics>
+```
 
 ## API settings
 
