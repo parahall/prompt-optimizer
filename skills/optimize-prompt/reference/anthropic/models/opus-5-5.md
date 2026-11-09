@@ -4,7 +4,7 @@ Checked against the docs on 2026-11-08.
 Source: [Prompting Claude Opus 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5) (section names below refer to this page).
 API ID `claude-opus-5-5`. Default effort `medium`. Thinking is always on. Settings: `api-settings.md`.
 
-Contents: How it differs · Remove from prompts · Add when you see this symptom · API settings · Known traps
+Contents: How it differs · Remove from prompts · Add when you see this symptom · Inherited from Opus 5 · API settings · Known traps
 Symptoms covered:
 - An unattended agent stops partway after reporting progress
 - A multi-app agent (email, docs, spreadsheets, CRM) misses information the task did not mention
@@ -14,10 +14,11 @@ Symptoms covered:
 - You want updates at predictable points (human-in-the-loop work)
 - Time to first token still matters after moving from thinking-disabled to `low` effort
 - Frontend output looks generic
+- Inherited from Opus 5: replies longer than the product needs; too much narration; padded documents; a narrow task gets widened; too many subagents; users see it correcting trivial slips
 
 ## How it differs from Opus 5
 
-- Writes output more than 30 percent faster and uses fewer tokens for the same task. Opus 5 prompts work without changes; the Opus 5 file is a reasonable starting point.
+- Writes output more than 30 percent faster and uses fewer tokens for the same task. Opus 5 prompts work without changes. The Opus 5 advice that still applies is copied below under "Inherited from Opus 5"; do not load `opus-5.md` or anything older.
 - At `medium` it matched or beat Opus 5 at `high` on coding and knowledge work. At the same level name it thinks more per turn than Opus 5, especially at `xhigh`/`max`.
 - Thinking cannot be disabled (Opus 5 allowed it at `high` or below).
 - Strong at long autonomous coding, code review with fewer false alarms, financial and document work, reading dense charts and diagrams, and computer use.
@@ -94,6 +95,66 @@ Name the specific patterns to avoid, check what the first result used instead, a
 > Quoted from Anthropic · "Frontend design defaults"
 ```text
 Output a vanilla HTML/CSS personal website with placeholder data. Do not use a cream or off-white background, italic accent words in headlines, numbered "01/02/03" section labels, monospace labels, or pill-shaped buttons.
+```
+
+## Inherited from Opus 5
+
+Source: [Prompting Claude Opus 5](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5). The Opus 5.5 page says: "Existing Claude Opus 5 prompts should perform well without changes, and the patterns in Prompting Claude Opus 5 remain a reasonable starting point." These are the Opus 5 patterns that the Opus 5.5 page does not replace or contradict. Use them on symptom only: Opus 5.5 uses fewer tokens than Opus 5, so do not add the length blocks by default. Left out on purpose: the "thinking disabled" advice (Opus 5.5 cannot turn thinking off) and Opus 5's effort settings.
+
+Remove from prompts:
+- **Verification and double-check instructions** ("include a final verification step", "use a subagent to verify", "double-check your answer"); also harness steps that add separate verification. ("Task scope and over-verification", "Self-correction")
+- **Severity or confidence filters in review prompts** ("only report high-severity issues", "be conservative"); ask it to report everything and filter in a separate pass. ("Capability improvements")
+
+### Replies are longer than the product needs (user-facing output)
+
+> Quoted from Anthropic · Opus 5 · "Response length and verbosity"
+```text
+Keep responses focused, brief, and concise. Keep disclaimers and caveats short, and spend most of the response on the main answer. When asked to explain something, give a high-level summary unless an in-depth explanation is specifically requested.
+```
+
+In a long system prompt, also add this reminder near the end:
+
+> Quoted from Anthropic · Opus 5 · "Response length and verbosity"
+```text
+<tone_preference>
+Keep outputs reasonably concise.
+</tone_preference>
+```
+
+### Too much narration during agentic work
+
+> Quoted from Anthropic · Opus 5 · "User-facing progress updates"
+```text
+Before your first tool call, say in one sentence what you're about to do. While working, give a brief update only when you find something important or change direction. When you finish, lead with the outcome: your first sentence should answer "what happened" or "what did you find," with supporting detail after it for readers who want it.
+```
+
+### Written documents (reports, Markdown files) are padded
+
+> Quoted from Anthropic · Opus 5 · "Written deliverable length"
+```text
+Match the length of written documents to what the task needs: cover the substance, but do not pad with filler sections, redundant summaries, or boilerplate.
+```
+
+### A narrow task gets widened or transformed
+
+> Quoted from Anthropic · Opus 5 · "Task scope and over-verification"
+```text
+Deliver what was asked, at the scope intended. Make routine judgment calls yourself, and check in only when different readings of the request would lead to materially different work. If the request seems mistaken or a better approach exists, say so in a sentence and continue with the task as asked rather than quietly narrowing, widening, or transforming it. Finish the whole task, and stop short of actions that are clearly beyond what was asked.
+```
+
+### Too many subagents (cost-sensitive harness)
+With Claude Code or the Agent SDK, also mention the hard caps `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`, `CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`, and the SDK's `max_budget_usd`.
+
+> Quoted from Anthropic · Opus 5 · "Controlling subagent spawning"
+```text
+Delegate to a subagent only for large tasks that are genuinely independent and parallelizable, such as a wide multi-file investigation. Do not delegate work you can finish yourself in a handful of tool calls, and do not use subagents to verify or double-check your own work. If one subagent can complete the task, use one rather than several, and keep spawn counts low.
+```
+
+### Users see it correcting trivial slips
+
+> Quoted from Anthropic · Opus 5 · "Self-correction"
+```text
+Only correct an earlier statement when the error would change the user's code, conclusions, or decisions. State corrections plainly and briefly, then continue the task. For slips that change nothing for the user, make the fix and move on without noting it.
 ```
 
 ## API settings
