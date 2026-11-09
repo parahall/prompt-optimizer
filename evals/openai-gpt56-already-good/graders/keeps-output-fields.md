@@ -1,6 +1,6 @@
 ---
 type: regex
 target: last_message
-pattern: "JSON[\\s\\S]{0,80}?(\\blabel\\b[\\s\\S]{0,40}\\breason\\b|\\breason\\b[\\s\\S]{0,40}\\blabel\\b)"
+pattern: "\\bJSON\\b[\\s\\S]{0,200}?(\\blabel\\b[\\s\\S]{0,200}\\breason\\b|\\breason\\b[\\s\\S]{0,200}\\blabel\\b)|(\\blabel\\b[\\s\\S]{0,200}\\breason\\b|\\breason\\b[\\s\\S]{0,200}\\blabel\\b)[\\s\\S]{0,200}?\\bJSON\\b"
 flags: i
 ---

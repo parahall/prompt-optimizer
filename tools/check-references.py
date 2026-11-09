@@ -37,15 +37,17 @@ def quoted_blocks(path: Path, name: str):
     while i < len(lines):
         if lines[i].startswith(marker):
             j = i + 1
-            if j >= len(lines) or not lines[j].startswith("```"):
-                yield i + 1, ""  # the block must start on the next line; an empty block is reported as missing
+            # The block must start on the next line with exactly three backticks and end with a
+            # line of exactly three backticks; otherwise an empty block is reported as missing.
+            if j >= len(lines) or not re.fullmatch(r"```[a-z]*", lines[j]):
+                yield i + 1, ""
                 i += 1
                 continue
             start = j + 1
             k = start
-            while k < len(lines) and not lines[k].startswith("```"):
+            while k < len(lines) and lines[k] != "```":
                 k += 1
-            yield i + 1, "\n".join(lines[start:k])
+            yield i + 1, "\n".join(lines[start:k]) if k < len(lines) else ""
             i = k
         i += 1
 
@@ -64,7 +66,7 @@ def check_coverage(provider: str, ref: Path, sources: str) -> int:
             print(f"GUIDE NOT DOWNLOADED (run tools/refresh-docs.sh): {guide_path.name}")
             return failures + 1
         guide = guide_path.read_text()
-        for slug in sorted(set(re.findall(r"prompting-claude-([a-z0-9-]+)\)", guide))):
+        for slug in sorted(set(re.findall(r"prompting-claude-([a-z0-9-]+)(?:\)|\")", guide))):
             if f"prompting-claude-{slug}.md" not in sources:
                 failures += 1
                 print(f"GUIDE LISTS A MODEL PAGE NOT IN tools/sources/anthropic.txt: {slug}")

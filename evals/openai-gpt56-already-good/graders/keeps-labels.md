@@ -1,6 +1,6 @@
 ---
 type: regex
 target: last_message
-pattern: "^(?=.*\\bcrash\\b)(?=.*\\bui\\b)(?=.*\\bperformance\\b)(?=.*\\baccount\\b)(?=.*\\bother\\b).*$"
-flags: m
+pattern: "\\blabels?\\b(?=[\\s\\S]{0,200}\\bcrash\\b)(?=[\\s\\S]{0,200}\\bui\\b)(?=[\\s\\S]{0,200}\\bperformance\\b)(?=[\\s\\S]{0,200}\\baccount\\b)(?=[\\s\\S]{0,200}\\bother\\b)"
+flags: i
 ---
