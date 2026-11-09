@@ -1,5 +1,6 @@
 ---
 type: regex
 target: last_message
-pattern: "crash`?[\\s,|/]+`?ui`?[\\s,|/]+`?performance`?[\\s,|/]+`?account`?[\\s,|/]+(or\\s+)?`?other"
+pattern: "^(?=.*\\bcrash\\b)(?=.*\\bui\\b)(?=.*\\bperformance\\b)(?=.*\\baccount\\b)(?=.*\\bother\\b).*$"
+flags: m
 ---

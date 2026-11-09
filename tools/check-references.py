@@ -98,7 +98,7 @@ def check_coverage(provider: str, ref: Path, sources: str) -> int:
         # model added to the list fails until the skill covers it.
         known = (models_text + (ref / "api-settings.md").read_text()).lower()
         for model_id in re.findall(r"/models/([a-z0-9.-]+)\.md", sources):
-            if model_id not in known:
+            if f"`{model_id}`" not in known:  # the exact API ID in backticks, not a prefix or a prose name
                 failures += 1
                 print(f"OPENAI MODEL {model_id} IS ON THE SOURCE LIST BUT NOT NAMED IN ANY REFERENCE FILE")
     return failures
