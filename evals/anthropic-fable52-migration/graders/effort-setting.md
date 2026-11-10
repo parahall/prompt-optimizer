@@ -1,6 +1,6 @@
 ---
 type: llm
 ---
-Look at the recommended API settings in the reply. The user runs this migration agent at medium effort, and on Claude Fable 5.2 it stops early; Anthropic's page says early stops are more common at low and medium effort.
-PASS if the reply recommends an explicit effort level that does not make early stops more likely for the agentic work (for example keeping medium, or raising to high), treats effort rather than prompt wording as the way to control thinking, and lowers effort, if at all, only for easy turns.
-FAIL if it gives no effort recommendation, lowers effort for the whole agentic workload (for example to low), or tells the user to keep or add prompt wording to make the model think less.
+Find the effort recommendation in the reply (usually under "Recommended API settings"). The agent in question is a long-running data-migration agent.
+PASS if the reply recommends running the migration agent at `medium` or a higher effort level (for example `high`). Suggesting a lower level only for short, easy turns is fine.
+FAIL if the reply recommends `low` effort for the migration work itself, gives no effort level at all, or tells the user to keep or add prompt wording that makes the model think less.

@@ -17,7 +17,7 @@ Symptoms covered:
 
 ## How it differs from earlier models
 
-- The page does not say Fable 5.1's advice still applies, so this file does not inherit it; do not load `fable-5-1.md`. Instead, the page lists habits from Fable 5.1 and Opus 5.5 prompts to remove (see "Remove from prompts").
+- The page does not say Fable 5.1's advice still applies, so this file does not inherit it; do not load `fable-5-1.md` to fill in this model. Instead, the page lists habits from Fable 5.1 and Opus 5.5 prompts to remove (see "Remove from prompts"). For the narrow fallback rule in `SKILL.md`, the one earlier file is `fable-5-1.md`. For a migration, load the source model's file as `SKILL.md` says.
 - At `high` and above it **thinks before almost every reply**, even a greeting. An instruction to answer directly does not stop it at `medium` and above (Fable 5.1 usually followed such a line). Effort is the control.
 - **Effort barely changes reply length.** Use the prompt for length and tone.
 - More likely to **stop early** on long multistep tasks, mostly at `low` and `medium`.

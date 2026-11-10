@@ -205,7 +205,7 @@ these files by removing them at the end of the task.
 
 ## 11. Context will be compacted, do not stop early
 
-Use when: the agent runs in a harness that compacts context or saves state to files, and it wraps up early near the context limit. Do not use on Fable 5, where showing context budgets causes the opposite problem; see `models/fable-5.md`.
+Use when: the agent runs in a harness that compacts context or saves state to files, and it wraps up early near the context limit. Do not use on Fable 5, where showing context budgets causes the opposite problem; see `models/fable-5.md`. On Fable 5.2 use the "Finishing work" block in `models/fable-5-2.md` instead: it tells the model to leave deliberate blockers alone, and that model's page advises against budget text in the prompt.
 
 > Quoted from Anthropic · BP · "Context awareness and multiwindow workflows"
 ```text

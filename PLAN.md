@@ -22,7 +22,7 @@ The first version covers Claude models only. OpenAI models and Google's Gemini m
 
 The guide you linked ("Prompting best practices") is one page with three parts:
 
-1. **A table of model-specific pages.** Each current model has its own page that lists only how it behaves *differently* from the model before it, and what to change in a prompt because of that. There are eight such pages today: Claude Fable 5.1 (shared with Claude Mythos 5.1), Claude Fable 5 (shared with Claude Mythos 5), Claude Opus 5.5, Claude Opus 5, Claude Opus 4.8, Claude Sonnet 5.5, Claude Sonnet 5, and Claude Haiku 5.5.
+1. **A table of model-specific pages.** Each current model has its own page that lists only how it behaves *differently* from the model before it, and what to change in a prompt because of that. There are nine such pages today (Fable 5.2 was added on 2026-11-10): Claude Fable 5.2 (shared with Claude Mythos 5.2), Claude Fable 5.1 (shared with Claude Mythos 5.1), Claude Fable 5 (shared with Claude Mythos 5), Claude Opus 5.5, Claude Opus 5, Claude Opus 4.8, Claude Sonnet 5.5, Claude Sonnet 5, and Claude Haiku 5.5.
 2. **General techniques for all current models.** Be clear and direct; explain *why* an instruction exists; use 3 to 5 examples inside `<example>` tags; separate parts of a prompt with XML tags (labels in angle brackets like `<instructions>` and `<documents>`); give a role; put long documents at the top and the question at the end; say what to do instead of what not to do; and patterns for tool use, thinking, agents, research, and front-end design.
 3. **Migration advice** for prompts written for older model generations.
 
@@ -112,6 +112,7 @@ prompt-optimizer/
 │           │   ├── api-settings.md         # per-model table: effort levels, default, starting level, thinking modes, max_tokens, removed parameters
 │           │   ├── snippets.md             # tested text blocks shared by many Claude models (parallel tool calls, safe actions, pasted text, and so on)
 │           │   └── models/
+│           │       ├── fable-5-2.md        # also covers Mythos 5.2
 │           │       ├── fable-5-1.md        # also covers Mythos 5.1
 │           │       ├── fable-5.md          # also covers Mythos 5
 │           │       ├── opus-5-5.md
