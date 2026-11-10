@@ -30,7 +30,7 @@ Contents
 **Spot it:** a `<thinking>`, `<reasoning>`, `<scratchpad>` section to fill before answering; "think step by step and write it down"; a `reasoning`, `thinking`, `rationale` or `trace` field in requested JSON or in a tool input schema; "show your full reasoning"; "explain your thinking verbatim"; a running log of private notes. Check tool descriptions and skill text too, not only the main prompt.
 
 **Verdict:**
-- Fable 5.1, Mythos 5.1, Fable 5, Mythos 5, Opus 5.5, Opus 5, Sonnet 5.5: **remove.** These models can decline such requests with the `reasoning_extraction` refusal category, which is billed and is not retried by server-side fallback.
+- Fable 5.2, Mythos 5.2, Fable 5.1, Mythos 5.1, Fable 5, Mythos 5, Opus 5.5, Opus 5, Sonnet 5.5: **remove.** These models can decline such requests with the `reasoning_extraction` refusal category, which is billed and is not retried by server-side fallback.
 - Haiku 5.5: **remove.** Thinking is on by default, so the reasoning already happens in thinking blocks; written-out reasoning in replies is a known problem on this model.
 - Opus 4.8, Sonnet 5 and legacy models **with thinking off**: manual chain of thought (reason first, then the answer in `<answer>` tags) is the documented fallback and may stay. With thinking on, prefer removing it.
 
@@ -59,13 +59,13 @@ Sources: [Opus 5: task scope and over-verification](https://platform.claude.com/
 - General: "think thoroughly" beats a hand-written step-by-step plan for how to reason.
 
 **Spot it, kind B, "think less":** "keep your thinking short", "don't deliberate", "answer directly".
-- Sonnet 5.5 and Haiku 5.5: **remove and recommend a lower effort level.** Prompt wording does not reliably reduce thinking on these models.
+- Fable 5.2, Sonnet 5.5 and Haiku 5.5: **remove and recommend a lower effort level.** Prompt wording does not reliably reduce thinking on these models (on Fable 5.2, "answer directly without deliberating" did not stop thinking at `medium` and above).
 - Opus 5.5: lower effort first; "Answer directly without deliberating." may be added at `low` effort if time to first token still matters, and quality must be measured.
-- Opus 4.8, Sonnet 5, Fable models: the steering line "Thinking adds latency and should only be used when it will meaningfully improve answer quality..." works; lowering effort is still the first lever.
+- Opus 4.8, Sonnet 5, Fable 5 and 5.1: the steering line "Thinking adds latency and should only be used when it will meaningfully improve answer quality..." works; lowering effort is still the first lever.
 
 **Spot it, kind C, "do not think" rules in an integration that runs with thinking off** (Opus 5 with `disabled`, Sonnet 5.5 with `between_tools`): **remove.** They increase leaking of internal XML tags into visible output.
 
-Sources: [Steering thinking](https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost); [Opus 5.5: thinking instructions in chat](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5#thinking-instructions-in-chat-system-prompts); [Sonnet 5.5: reasoning tasks with JSON](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5#reasoning-tasks-with-json-output); [Haiku 5.5: effort](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-haiku-5-5#use-effort-to-control-thinking).
+Sources: [Steering thinking](https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost); [Opus 5.5: thinking instructions in chat](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5#thinking-instructions-in-chat-system-prompts); [Sonnet 5.5: reasoning tasks with JSON](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5-5#reasoning-tasks-with-json-output); [Haiku 5.5: effort](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-haiku-5-5#use-effort-to-control-thinking); [Fable 5.2: calibrate effort](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-2#calibrate-effort).
 
 ## 4. Shouting and blanket tool rules
 
@@ -89,6 +89,7 @@ Source: best practices, "Control the format of responses"; [Fable 5.1: formattin
 
 **Spot it, suppressing:** "hold all findings for the final response", "do not narrate", "keep updates to a minimum".
 - Fable 5.1, Sonnet 5.5: **remove.** These models already write few user-facing updates; add a positive update instruction only if the product shows the model's work live.
+- Fable 5.2 also writes little during long tool runs. Where users watch live, use the update text in `models/fable-5-2.md` ("Long agentic turns look silent"); its page does not discuss suppression rules, so flag any such rule in the report instead of silently keeping it.
 
 **Spot it, forcing:** "after every 3 tool calls, summarize progress".
 - Opus 4.8, Sonnet 5: **remove.** They give regular updates without it. Describe the wanted shape of updates instead, with an example, if needed.
@@ -133,6 +134,7 @@ Symptom-driven: add a scope block only for coding or task agents where unrequest
 - Opus 5: scope block in `models/opus-5.md`. Opus 5.5: the same block, inherited, in `models/opus-5-5.md`.
 - Fable 5: "don't add features, refactor..." block in `models/fable-5.md`.
 - Fable 5.1: "keep changes and tests to what the task asks for" block in `models/fable-5-1.md`.
+- Fable 5.2: the opposite lever exists. Its ownership sentence (`models/fable-5-2.md`) makes it restructure and fix nearby code; leave that sentence out where the user wants minimal changes, because a scope rule does not cancel it.
 - Sonnet 5.5, Haiku 5.5: the "when the work is done and checked, stop and report" paragraph in their files.
 - Legacy Opus 4.5/4.6: over-engineering block in `snippets.md`.
 
@@ -140,6 +142,7 @@ Symptom-driven: add a scope block only for coding or task agents where unrequest
 
 - Opus 5 delegates readily. "Use subagents for everything" multiplies cost; add the damping block from `models/opus-5.md` for cost-sensitive harnesses (for Opus 5.5, the inherited copy in `models/opus-5-5.md`).
 - Fable 5 also dispatches subagents readily, but its docs recommend using them, with guidance on when ("Parallel subagents" in `models/fable-5.md`), and recommend fresh-context verifier subagents for long runs. Do not copy Opus 5's block into a Fable 5 prompt: its "do not use subagents to verify" line contradicts Fable 5's guidance.
+- Fable 5.2: delegation depends on the harness. Review existing "delegate" lines first; change the subagent tool description only if it still over-delegates (see `models/fable-5-2.md`). At `xhigh`/`max` it may start subagents to review its own work.
 - Opus 4.8 spawns fewer subagents by default; add explicit "when to spawn" guidance only if more delegation is wanted.
 - Never tell a model to use subagents to verify its own work on Opus 5.
 
@@ -162,6 +165,6 @@ Source: [Fable 5.1: reduce safeguard false positives](https://platform.claude.co
 
 **Spot it:** the application could be asked about medicine doses: a health, pharmacy, or parenting product, or a general consumer assistant, whether or not the prompt mentions medicine.
 
-**Verdict:** all models with a block: **add** the matching "Medicine dosing" block from `snippets.md`, word for word, even if nothing else changes. Haiku 5.5 has its own block (it adds a rule about emotional distress); Sonnet 4.6 and Haiku 4.5 have their own. If the application clearly cannot be asked about medicine (for example a code reviewer), skip it.
+**Verdict:** all models with a block: **add** the matching "Medicine dosing" block from `snippets.md`, word for word, even if nothing else changes. Fable 5.2 uses the same text as the Fable 5.1 group (Anthropic lists it under its own label). Haiku 5.5 has its own block (it adds a rule about emotional distress); Sonnet 4.6 and Haiku 4.5 have their own. If the application clearly cannot be asked about medicine (for example a code reviewer), skip it.
 
 Source: [Best practices: medication dosing](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices#medication-dosing).

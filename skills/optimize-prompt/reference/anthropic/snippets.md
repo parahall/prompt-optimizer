@@ -267,7 +267,7 @@ The assistant is Claude, created by Anthropic. The current model is Claude Opus 
 
 Use when: people might ask the application about medicine doses (health, pharmacy, parenting, or a general consumer assistant). Anthropic says to add the block for the model the application calls, **exactly as written**. With web search, the model checks the product label before answering; without it, the model points the person to the label, a pharmacist, or the child's doctor instead of giving a number. Keep any dosing rules the prompt already has, and say in the report that the block was added. For a model not named in any block (for example Opus 4.5), the docs give no block: say so in the report instead of picking one.
 
-Block for Claude Fable 5.1, Claude Fable 5, Claude Opus 5.5, Claude Opus 5, Claude Opus 4.8, Claude Opus 4.7, Claude Opus 4.6, Claude Sonnet 5.5, and Claude Sonnet 5:
+Block for Claude Fable 5.2 (listed separately by Anthropic, same text), Claude Fable 5.1, Claude Fable 5, Claude Opus 5.5, Claude Opus 5, Claude Opus 4.8, Claude Opus 4.7, Claude Opus 4.6, Claude Sonnet 5.5, and Claude Sonnet 5:
 
 > Quoted from Anthropic · BP · "Medication dosing"
 ```text

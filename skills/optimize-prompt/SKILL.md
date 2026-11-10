@@ -30,7 +30,7 @@ From the target provider's folder, `reference/<provider>/` next to this file, re
 - `general-techniques.md`: always.
 - `api-settings.md`: always.
 - The target model's file in `models/`:
-  - `anthropic/models/`: `fable-5-1.md` (also Mythos 5.1), `fable-5.md` (also Mythos 5), `opus-5-5.md`, `opus-5.md`, `opus-4-8.md`, `sonnet-5-5.md`, `sonnet-5.md`, `haiku-5-5.md`, or `legacy.md` (Opus 4.7, 4.6, 4.5, Sonnet 4.6, Haiku 4.5, Sonnet 4.5).
+  - `anthropic/models/`: `fable-5-2.md` (also Mythos 5.2), `fable-5-1.md` (also Mythos 5.1), `fable-5.md` (also Mythos 5), `opus-5-5.md`, `opus-5.md`, `opus-4-8.md`, `sonnet-5-5.md`, `sonnet-5.md`, `haiku-5-5.md`, or `legacy.md` (Opus 4.7, 4.6, 4.5, Sonnet 4.6, Haiku 4.5, Sonnet 4.5).
   - `openai/models/`: `gpt-6.md` (GPT-6 Astra, 6.1 Sol, 6.1 Terra, 6 Luna, 6 Sol), `gpt-5-6.md` (GPT-5.6 Sol, Terra, Luna), `gpt-5-5.md`, `gpt-5-4.md` (also 5.4 Mini and Nano), or `legacy.md` (GPT-5.3-Codex, 5.2, 5.1, 5, 4.1).
 - `snippets.md`: when the checklist or model file points to a block in it.
 - Never load older model files to "fill in" the target model. Each model file is complete together with the general files; where Anthropic says an older model's advice still applies (Opus 5.5, Sonnet 5.5), it is already copied into the newer file.
