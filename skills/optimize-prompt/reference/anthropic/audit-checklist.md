@@ -62,7 +62,7 @@ Sources: [Opus 5: task scope and over-verification](https://platform.claude.com/
 
 **Spot it, kind B, "think less":** "keep your thinking short", "don't deliberate", "answer directly".
 - Sonnet 5.5 and Haiku 5.5: **remove and recommend a lower effort level.** Prompt wording does not reliably reduce thinking on these models.
-- Fable 5.2: **remove; lower effort only for easy turns.** "Answer directly without deliberating" did not stop thinking at `medium` and above. For long agentic work keep or raise effort, because this model stops early more often at `low` and `medium`.
+- Fable 5.2: **remove, and lower effort for the easy turns.** "Answer directly without deliberating" did not stop thinking at `medium` and above. This model stops early more often at `low` and `medium`, so for agentic work at those levels add the "Finishing work" text from `models/fable-5-2.md`.
 - Opus 5.5: lower effort first; "Answer directly without deliberating." may be added at `low` effort if time to first token still matters, and quality must be measured.
 - Opus 4.8, Sonnet 5, Fable 5 and 5.1: the steering line "Thinking adds latency and should only be used when it will meaningfully improve answer quality..." works; lowering effort is still the first lever.
 
@@ -92,11 +92,12 @@ Source: best practices, "Control the format of responses"; [Fable 5.1: formattin
 
 **Spot it, suppressing:** "hold all findings for the final response", "do not narrate", "keep updates to a minimum".
 - Fable 5.1, Sonnet 5.5: **remove.** These models already write few user-facing updates; add a positive update instruction only if the product shows the model's work live.
-- Fable 5.2 also writes little during long tool runs. First recommend the client display setting (`display: "updates"` or `"summarized"`), because the updates may already exist as thinking blocks that the client does not show. Then, where users watch live and still get too few updates, use the update text in `models/fable-5-2.md` ("Long agentic turns look silent"); when you add that text, **remove** any rule that suppresses updates, because the two contradict each other and this model follows instructions closely. Where nobody watches live, its page says nothing about suppression rules: keep the rule and mention it in the report.
+- Fable 5.2 also writes little during long tool runs. First recommend the client display setting (`display: "updates"` or `"summarized"`), because the updates may already exist as thinking blocks that the client does not show. Then, where users watch live and still get too few updates, use the update text in `models/fable-5-2.md` ("Long agentic turns look silent"); when you add that text, **remove** any rule that suppresses updates, because the two contradict each other and this model follows instructions closely. This is the skill's own way to settle the contradiction, not advice from the page: say so in the report, and if the silence rule reads as a firm product requirement, do not pick; ask the user which wins. Where nobody watches live, its page says nothing about suppression rules: keep the rule and mention it in the report.
 
 **Spot it, forcing:** "after every 3 tool calls, summarize progress".
 - Opus 4.8, Sonnet 5: **remove.** They give regular updates without it. Describe the wanted shape of updates instead, with an example, if needed.
 - Opus 5: describe cadence and shape instead (it narrates a lot); see `models/opus-5.md`.
+- Fable 5.2: **keep.** Its page recommends a line of this kind ("Every few tool calls, give the user a one-line update on where things stand.") where users watch live and the harness cannot send reminders; see `models/fable-5-2.md`.
 
 ## 7. Length and verbosity
 

@@ -4,7 +4,7 @@ Checked against the docs on 2026-11-10.
 Source: [Prompting Claude Fable 5.2](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-2) (section names below refer to this page).
 API IDs `claude-fable-5-2` (Mythos 5.2: `claude-mythos-5-2`; the two share this prompting guidance but are separate models, and Mythos 5.2 is offered only to organizations verified through Anthropic's Cyber and Life Sciences Verification Programs). Default effort `high`. Thinking is always on (adaptive only; `enabled` and `disabled` return a 400 error). Settings: `api-settings.md`.
 
-Contents: How it differs · Remove from prompts · Add when you see this symptom · API settings · Known traps
+Contents: How it differs · Remove from prompts · Add when you see this symptom · When migrating · API settings · Known traps
 Symptoms covered:
 - Agentic turns end before the work is done (more often at `low` and `medium`)
 - Approval rules hold back routine work
@@ -31,7 +31,7 @@ Symptoms covered:
 
 ## Remove from prompts
 
-- **Instructions to think less** ("answer directly without deliberating"): no effect at `medium` and above. Remove them, and lower effort only for easy turns (with the per-message effort change); do not lower effort for long agentic work, because the model stops early more often at `low` and `medium`. ("Review instructions written for earlier models", "Calibrate effort")
+- **Instructions to think less** ("answer directly without deliberating"): no effect at `medium` and above. Remove them, and lower the effort level for the easy turns that take too long (with the per-message effort change where available). The model stops early more often at `low` and `medium`, so if agentic work runs at those levels, add the "Finishing work" text. ("Review instructions written for earlier models", "Calibrate effort")
 - **Requests to write reasoning in the reply** (`reasoning_extraction` refusals). To see how the model reasoned, recommend `display: "summarized"` and reading the thinking blocks. ("Safeguard refusals")
 - **The Opus 5.5 "treat that answer as done" lines** for chat: on Fable 5.2 they reduced thinking on follow-ups but made the model far less likely to point out mistakes in its earlier answers. Remove them where the model should keep re-checking earlier answers; elsewhere, keep them only after testing. ("Review instructions written for earlier models")
 - **Standing instructions to delegate** in system prompts, skills, and agent files, when the model starts more subagents than the tasks need. ("Review instructions written for earlier models")
@@ -120,7 +120,15 @@ Use plain words, and write in clear, understandable full sentences. Do not use a
 Not a prompt problem: benign cybersecurity and life-science work can trigger the `cyber` and `bio` classifiers. Point the user to Anthropic's [Cyber Verification Program](https://support.claude.com/en/articles/14604842) and [Life Sciences Verification Program](https://www.anthropic.com/news/life-sciences-verification-program); Mythos 5.2 offers the same capabilities only to organizations verified through them. The page gives no rewording advice for this (the Fable 5.1 tips on phrasing are not documented for Fable 5.2). ("Safeguard refusals")
 
 ### Easy requests take too long or cost too much
-A setting, not wording: run those easy turns at a lower effort level, with the per-message effort change where available (see API settings), and keep long agentic work at `medium` or above. Prompt instructions to answer directly do not work at `medium` and above. ("Calibrate effort")
+A setting, not wording: run those easy turns at a lower effort level, with the per-message effort change where available (see API settings), and for agentic work that runs at `low` or `medium`, add the "Finishing work" text, because early stops are more common there. Prompt instructions to answer directly do not work at `medium` and above. ("Calibrate effort")
+
+## When migrating to Fable 5.2
+
+The page's order of work; put it under "What to test" in the report. ("Where to start")
+1. Set `effort` to `high` explicitly, then run evals at `medium` and `xhigh` as well.
+2. Read the system prompts, skills, agent files, memory files, notes, and harness text that carry over, and remove or test the items under "Remove from prompts".
+3. Run the longest agentic tasks. Note where the model stops early, asks for approvals it doesn't need, goes quiet, delegates more than the task needs, or adds to existing code where restructuring was wanted.
+4. Apply the guidance for each observed behavior one at a time, and measure its effect and its token cost.
 
 ## API settings
 
