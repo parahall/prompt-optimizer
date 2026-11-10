@@ -15,7 +15,7 @@ It also moves prompts between providers, for example a prompt tuned for Claude t
 Why per model: the same instruction can help one model and hurt another. "Double-check your answer" helps most Claude models but causes wasted re-checking on Claude Opus 5. A rule against bullet points helps older models but suppresses needed structure on Claude Fable 5.1. Asking for reasoning inside `<thinking>` tags, once common advice, can make the newest Claude models decline the request. On the OpenAI side, a step-by-step process script makes GPT-5.5 mechanical but is exactly what GPT-5.4 Mini needs, and "Be concise" can make GPT-5.6 answers too short.
 
 **Supported now:**
-- Claude models: Fable 5.1, Fable 5, Opus 5.5, Opus 5, Opus 4.8, Sonnet 5.5, Sonnet 5, Haiku 5.5, and short notes for older models.
+- Claude models: Fable 5.2, Fable 5.1, Fable 5, Opus 5.5, Opus 5, Opus 4.8, Sonnet 5.5, Sonnet 5, Haiku 5.5, and short notes for older models.
 - OpenAI GPT text models: the GPT-6 family (Astra, 6.1 Sol, 6.1 Terra, Luna, 6 Sol), the GPT-5.6 family (Sol, Terra, Luna), GPT-5.5, GPT-5.4 and 5.4 Mini, and short notes for 5.3-Codex, 5.2, 5.1, 5, and 4.1. Voice, image, and open-weight models are not covered.
 
 **Planned:** Google Gemini models.

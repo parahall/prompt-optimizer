@@ -1,6 +1,7 @@
 # One documentation page per line. Lines starting with # are ignored.
 # Anthropic serves a plain Markdown copy of every docs page when ".md" is added to the address.
 https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices.md
+https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-2.md
 https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1.md
 https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5.md
 https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5-5.md

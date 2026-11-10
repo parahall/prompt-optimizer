@@ -1,6 +1,6 @@
 # API settings for Claude models
 
-Checked against the docs on 2026-11-08. Sources: [Effort](https://platform.claude.com/docs/en/build-with-claude/effort), [Thinking support by model](https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting#thinking-support-defaults-and-rejected-configurations-by-model), [Steering thinking](https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost), [Models overview](https://platform.claude.com/docs/en/models/overview), and each model's prompting page.
+Checked against the docs on 2026-11-10. Sources: [Effort](https://platform.claude.com/docs/en/build-with-claude/effort), [Thinking support by model](https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting#thinking-support-defaults-and-rejected-configurations-by-model), [Steering thinking](https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost), [Models overview](https://platform.claude.com/docs/en/models/overview), and each model's prompting page.
 
 Many problems are fixed by settings, not wording. Always report recommended settings next to the rewritten prompt. Only recommend settings the target model accepts.
 
@@ -22,6 +22,7 @@ Contents
 
 | Model | API ID | Default effort | Effort levels | Thinking when the field is omitted | Thinking can be turned off? |
 |---|---|---|---|---|---|
+| Fable 5.2 / Mythos 5.2 | `claude-fable-5-2` / `claude-mythos-5-2` | high | all five | adaptive, always on | No (`disabled` returns 400) |
 | Fable 5.1 / Mythos 5.1 | `claude-fable-5-1` / `claude-mythos-5-1` | high | all five | adaptive, always on | No (`disabled` returns 400) |
 | Fable 5 / Mythos 5 | `claude-fable-5` / `claude-mythos-5` | high | all five | adaptive, always on | No |
 | Opus 5.5 | `claude-opus-5-5` | **medium** | all five | adaptive, always on | No |
@@ -44,6 +45,7 @@ Always say: start here, then compare two or three levels on real traffic.
 
 | Model | Chat, latency-sensitive | Agentic coding, multistep tools | Knowledge work, hard reasoning |
 |---|---|---|---|
+| Fable 5.2 | `low` for quick, well-specified, high-volume work; `medium` for chat and interactive coding | `high`; `xhigh` only with a measured gain | `medium` for everyday knowledge work; `high` for research and hard reasoning |
 | Fable 5.1 | `medium` or `low` (at `low` it searches less) | `high`; `xhigh`/`max` only with a measured gain | `high` |
 | Fable 5 | `medium` or `low` | `high`; `xhigh` for the most demanding | `high` |
 | Opus 5.5 | `low` or `medium` | `medium` (matched Opus 5 at `high` in Anthropic's tests) | `medium`; test `high` |
@@ -54,21 +56,21 @@ Always say: start here, then compare two or three levels on real traffic.
 | Haiku 5.5 | `low` | `medium` | `high` (also for strict instruction following) |
 | Sonnet 4.6 | `low` | `medium` (recommended default) | `high` |
 
-`max_tokens`: leave room for thinking. Opus 5.5 and Sonnet 5.5 agentic coding: 128,000 (the maximum) with streaming. Opus 5, Opus 4.8, Opus 4.7 at `xhigh`/`max`: start at 64,000. Fable 5.1 long deliverables at `xhigh`/`max`: size for thinking plus the reply.
+`max_tokens`: leave room for thinking. Opus 5.5 and Sonnet 5.5 agentic coding: 128,000 (the maximum) with streaming. Opus 5, Opus 4.8, Opus 4.7 at `xhigh`/`max`: start at 64,000. Fable 5.1 long deliverables at `xhigh`/`max`: size for thinking plus the reply. Fable 5.2 at `high` and above: a large `max_tokens`.
 
 ## 4. Settings that now return errors
 
 Report any of these found in the user's code or described setup:
 
 - `thinking: {type: "enabled", budget_tokens: N}`: 400 error on Claude 4.7 and later models (deprecated on 4.6). Replace with `adaptive` plus an effort level.
-- `thinking: {type: "disabled"}` on Fable 5.1, Fable 5, Opus 5.5, Sonnet 5.5 (use `between_tools`), and on Opus 5 / Haiku 5.5 at `xhigh` or `max`.
+- `thinking: {type: "disabled"}` on Fable 5.2, Fable 5.1, Fable 5, Opus 5.5, Sonnet 5.5 (use `between_tools`), and on Opus 5 / Haiku 5.5 at `xhigh` or `max`.
 - `between_tools` on any model other than Sonnet 5.5, or on Sonnet 5.5 at `xhigh`/`max`. `between_tools` also rejects `display`, `budget_tokens`, and per-message effort changes.
 - A prefilled last assistant message: 400 error on Claude 4.6 models and later.
 - `temperature`, `top_p`, `top_k` on Sonnet 5: 400 error. The docs call this "new for Sonnet-class models"; check the target model's migration guide for other models. Use prompt instructions for tone and variety instead.
 
 ## 5. Rules that affect how the prompt may change
 
-- **Keep the system prompt fixed within a conversation** on Haiku 5.5 and the 5.1-generation models. Changing `system` or `tools` mid-conversation invalidates earlier thinking blocks (can return a 400 error). Put new instructions in a mid-conversation system message or the newest user turn instead. Tell the user to apply the optimized prompt to new conversations only.
-- **Changing top-level effort between requests breaks the prompt cache.** For per-turn changes, recommend the per-message effort change (beta) on the models that support it: Fable 5.1, Mythos 5.1, Opus 5.5, Opus 5, Sonnet 5.5, and Haiku 5.5 (not Fable 5). It needs the beta header `mid-conversation-output-config-2026-07-01`; without it the request returns a 400 error. On Sonnet 5.5 with `between_tools` and on Haiku 5.5 with `thinking: {type: "disabled"}`, a per-message effort that differs from the level in effect also returns a 400 error; to vary effort per turn on those two models, use adaptive thinking.
+- **Keep the system prompt fixed within a conversation** on Fable 5.2, Mythos 5.2, Fable 5.1, Mythos 5.1, Opus 5.5, Sonnet 5.5, and Haiku 5.5. Changing `system`, `tools`, or an earlier message mid-conversation invalidates the thinking blocks after the change and can return a 400 error (on Fable 5.2 the API enforces this for every account). Put new instructions in a mid-conversation system message or the newest user turn instead. Tell the user to apply the optimized prompt to new conversations only.
+- **Changing top-level effort between requests breaks the prompt cache.** For per-turn changes, recommend the per-message effort change (beta) on the models that support it: Fable 5.2, Mythos 5.2, Fable 5.1, Mythos 5.1, Opus 5.5, Opus 5, Sonnet 5.5, and Haiku 5.5 (not Fable 5). It needs the beta header `mid-conversation-output-config-2026-07-01`; without it the request returns a 400 error. The model list above is for the Claude API and Google Cloud (Google managed); Claude Platform on AWS, Google Cloud (Anthropic managed), and Amazon Bedrock support fewer models. On Amazon Bedrock it exists only on Fable 5.2, Mythos 5.2, Fable 5.1, Mythos 5.1, and Opus 5.5; with Bedrock's InvokeModel API only on Fable 5.2, Mythos 5.2, Fable 5.1, and Opus 5.5, and the value goes in the request body's `anthropic_beta` array instead of a header. For any other cloud platform, tell the user to confirm availability on the effort page. On Sonnet 5.5 with `between_tools` and on Haiku 5.5 with `thinking: {type: "disabled"}`, a per-message effort that differs from the level in effect also returns a 400 error; to vary effort per turn on those two models, use adaptive thinking.
 - **Read responses by block type.** On models where thinking is on, a reply may start with a `thinking` block; code that reads `content[0].text` breaks.
-- **Progress updates on Opus 5.5, Sonnet 5.5, Fable 5.1** arrive as thinking blocks that are empty at the default display. If the user says the agent "looks silent", recommend `display: "updates"` (beta header `thinking-display-updates-2026-08-18`) before changing the prompt. Only with adaptive thinking: on Sonnet 5.5 with `between_tools` the notes already come back with their summary text, and sending `display` returns a 400 error.
+- **Progress updates on Opus 5.5, Sonnet 5.5, Fable 5.2, Fable 5.1** arrive as thinking blocks that are empty at the default display. If the user says the agent "looks silent", recommend `display: "updates"` (beta header `thinking-display-updates-2026-08-18`) before changing the prompt. Only with adaptive thinking: on Sonnet 5.5 with `between_tools` the notes already come back with their summary text, and sending `display` returns a 400 error.

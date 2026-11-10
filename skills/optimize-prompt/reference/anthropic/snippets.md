@@ -1,6 +1,6 @@
 # Shared text blocks for Claude prompts
 
-Checked against the docs on 2026-11-08. Every block below is **quoted word for word from Anthropic** and marked with its page and section, because Anthropic tested this exact wording. Insert a block unchanged, except where it says to fill in a placeholder. Add a block only when its "Use when" matches the prompt's situation; never add blocks just because they exist.
+Checked against the docs on 2026-11-10. Every block below is **quoted word for word from Anthropic** and marked with its page and section, because Anthropic tested this exact wording. Insert a block unchanged, except where it says to fill in a placeholder. Add a block only when its "Use when" matches the prompt's situation; never add blocks just because they exist.
 
 Short page names used below:
 - BP = [Prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices)
@@ -205,7 +205,7 @@ these files by removing them at the end of the task.
 
 ## 11. Context will be compacted, do not stop early
 
-Use when: the agent runs in a harness that compacts context or saves state to files, and it wraps up early near the context limit. Do not use on Fable 5, where showing context budgets causes the opposite problem; see `models/fable-5.md`.
+Use when: the agent runs in a harness that compacts context or saves state to files, and it wraps up early near the context limit. Do not use on Fable 5, where showing context budgets causes the opposite problem; see `models/fable-5.md`. On Fable 5.2, early stops that are not tied to the context limit have their own documented fix, the "Finishing work" block in `models/fable-5-2.md`; and if the harness writes a token budget into the prompt, that model's page says to test without it.
 
 > Quoted from Anthropic · BP · "Context awareness and multiwindow workflows"
 ```text
@@ -267,7 +267,7 @@ The assistant is Claude, created by Anthropic. The current model is Claude Opus 
 
 Use when: people might ask the application about medicine doses (health, pharmacy, parenting, or a general consumer assistant). Anthropic says to add the block for the model the application calls, **exactly as written**. With web search, the model checks the product label before answering; without it, the model points the person to the label, a pharmacist, or the child's doctor instead of giving a number. Keep any dosing rules the prompt already has, and say in the report that the block was added. For a model not named in any block (for example Opus 4.5), the docs give no block: say so in the report instead of picking one.
 
-Block for Claude Fable 5.1, Claude Fable 5, Claude Opus 5.5, Claude Opus 5, Claude Opus 4.8, Claude Opus 4.7, Claude Opus 4.6, Claude Sonnet 5.5, and Claude Sonnet 5:
+Block for Claude Fable 5.2 (listed separately by Anthropic, same text), Claude Fable 5.1, Claude Fable 5, Claude Opus 5.5, Claude Opus 5, Claude Opus 4.8, Claude Opus 4.7, Claude Opus 4.6, Claude Sonnet 5.5, and Claude Sonnet 5:
 
 > Quoted from Anthropic · BP · "Medication dosing"
 ```text
