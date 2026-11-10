@@ -83,7 +83,7 @@ A running session keeps the version it started with. Run `/reload-plugins` or st
 2. Make sure "Code execution and file creation" is on in Settings > Capabilities (on by default on Team plans).
 3. Go to Customize > Skills, click "+", then "+ Create skill", choose "Upload a skill", and upload the ZIP.
 
-Then ask Claude to optimize a prompt for a named model. To update, download the ZIP again and upload it. Maintainers build the ZIP with `tools/build-skill-zip.sh` and attach it to a GitHub release.
+Then ask Claude to optimize a prompt for a named model. To update, download the ZIP again and upload it. A GitHub Action (`.github/workflows/skill-zip.yml`) rebuilds the ZIP with `tools/build-skill-zip.sh` and publishes it as a new release whenever the skill changes on `main`, so the download link always gives the newest version.
 
 ### As a personal skill from a clone
 
