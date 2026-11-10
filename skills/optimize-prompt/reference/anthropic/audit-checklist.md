@@ -30,7 +30,7 @@ Contents
 **Spot it:** a `<thinking>`, `<reasoning>`, `<scratchpad>` section to fill before answering; "think step by step and write it down"; a `reasoning`, `thinking`, `rationale` or `trace` field in requested JSON or in a tool input schema; "show your full reasoning"; "explain your thinking verbatim"; a running log of private notes. Check tool descriptions and skill text too, not only the main prompt.
 
 **Verdict:**
-- Fable 5.2, Mythos 5.2, Fable 5.1, Mythos 5.1, Fable 5, Mythos 5, Opus 5.5, Opus 5, Sonnet 5.5: **remove.** These models can decline such requests with the `reasoning_extraction` refusal category, which is billed and is not retried by server-side fallback.
+- Fable 5.2, Mythos 5.2, Fable 5.1, Mythos 5.1, Fable 5, Mythos 5, Opus 5.5, Opus 5, Sonnet 5.5: **remove.** These models can decline such requests with the `reasoning_extraction` refusal category, which is billed and has no recommended fallback model, so the fix is to change the prompt, not to retry.
 - Haiku 5.5: **remove.** Thinking is on by default, so the reasoning already happens in thinking blocks; written-out reasoning in replies is a known problem on this model.
 - Opus 4.8, Sonnet 5 and legacy models **with thinking off**: manual chain of thought (reason first, then the answer in `<answer>` tags) is the documented fallback and may stay. With thinking on, prefer removing it.
 
