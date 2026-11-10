@@ -1,5 +1,5 @@
 ---
-description: Moving a Fable 5.1 agent prompt to Fable 5.2 removes the "think less" line (lower effort instead), adds the Finishing work block for early stops, and keeps the hard requirements.
+description: Moving a Fable 5.1 agent prompt to Fable 5.2 removes the "think less" line, keeps effort at medium or higher for the agentic work (lower only for easy turns), adds the Finishing work text for early stops, and keeps the hard requirements.
 max_turns: 15
 allowed_tools: [Read, Glob, Grep, Skill]
 ---

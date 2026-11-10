@@ -11,7 +11,7 @@ The first version covers Claude models only. OpenAI models and Google's Gemini m
 ## Decisions so far (2026-11-08)
 
 1. Names: `prompt-optimizer` for the repository and plugin, `optimize-prompt` for the skill. Approved.
-2. Models: the eight Claude models that have their own page, plus one shared `legacy.md` for older Claude models. Approved. OpenAI and Gemini follow in a later phase (section 7).
+2. Models: the Claude models that have their own page (eight when this was decided; nine since Fable 5.2 was added on 2026-11-10), plus one shared `legacy.md` for older Claude models. Approved. OpenAI and Gemini follow in a later phase (section 7).
 3. When it runs: both. Claude may start it on its own when you write or edit a prompt, and you can start it with `/optimize-prompt`. The description must be narrow so it does not start by accident.
 4. Where the result goes: decided by the input. If the prompt came from a file, write the result to new files next to it (`<name>.optimized.<ext>` and `<name>.optimized.report.md`) and show a short summary in the chat. If the prompt was pasted into the chat, show the full result in the chat. In both cases, when the Artifact tool is available in the session, also create a private side-by-side page (old prompt, new prompt, list of changes) without asking. The original file is never overwritten unless the user asks.
 5. Quoting: approved. Anthropic's tested sample blocks are quoted word for word with the page and section named; everything else is in our own words; the README states the source and that the project is independent. An example is on the same Artifact page.
@@ -29,7 +29,7 @@ The guide you linked ("Prompting best practices") is one page with three parts:
 Three supporting pages matter as much as the guide itself:
 
 - **Effort.** "Effort" is an API setting (`output_config.effort`) with five levels: `low`, `medium`, `high`, `xhigh`, `max`. It controls how much the model thinks and works. The docs repeat many times that effort, not prompt wording, is the first control to change. The default is `medium` on Opus 5.5 and Haiku 5.5 and `high` on the others.
-- **Steering thinking.** "Thinking" is the model's private reasoning before it answers. On current models it is "adaptive": the model decides how much to think. On Fable 5.1, Fable 5 and Opus 5.5 it cannot be turned off.
+- **Steering thinking.** "Thinking" is the model's private reasoning before it answers. On current models it is "adaptive": the model decides how much to think. On Fable 5.2, Fable 5.1, Fable 5 and Opus 5.5 it cannot be turned off.
 - **Refusals.** Newer models run safety filters. One filter category, called `reasoning_extraction`, declines prompts that ask the model to write its reasoning into the answer (for example "think step by step inside `<thinking>` tags first", or a `reasoning` field in JSON output). Old prompt-engineering advice recommended exactly this, so it is the single most important thing the skill must detect and remove.
 
 ### 2.2 The key insight: the advice is organized by symptom
@@ -51,7 +51,7 @@ These conflicts are the reason a per-model skill is worth building. Examples fro
 | "Think less" / "answer directly" | Does **not** work on Sonnet 5.5 or Haiku 5.5. Recommend a lower effort level instead. |
 | "CRITICAL: You MUST use this tool" | Newer models are more obedient and now use the tool too often. Soften to "Use this tool when...". |
 | "Only report high-severity issues" in a code-review prompt | Opus 4.8, Opus 5 and Sonnet 5 follow it literally and report fewer real bugs. Replace with "report everything, with confidence and severity, and filter later". |
-| "Write your reasoning in `<thinking>` tags" | Can trigger a `reasoning_extraction` refusal on Fable 5.1, Fable 5, Opus 5.5, Opus 5, Sonnet 5.5. Remove it; read the reasoning from the API's summarized thinking instead. |
+| "Write your reasoning in `<thinking>` tags" | Can trigger a `reasoning_extraction` refusal on Fable 5.2, Fable 5.1, Fable 5, Opus 5.5, Opus 5, Sonnet 5.5. Remove it; read the reasoning from the API's summarized thinking instead. |
 | A rule that tells the model not to think, when thinking is off | Makes internal tags leak into the visible answer on Opus 5 and Sonnet 5.5. Remove it. |
 
 ### 2.4 Things that are API settings, not prompt text
@@ -154,9 +154,9 @@ Each step has a check that proves it is done.
    → Check: `claude plugin validate .` passes.
 2. **Write the evaluations first** (about ten cases, listed in section 6), and run them with no skill to see the baseline.
    → Check: the baseline run finishes and shows which cases fail without the skill.
-3. **Write `tools/refresh-docs.sh`.** It downloads the main guide, the eight model pages, effort, steering thinking, refusals, and the models overview, into a git-ignored folder, and prints a diff against the last download.
+3. **Write `tools/refresh-docs.sh`.** It downloads the main guide, the model pages, effort, steering thinking, refusals, and the models overview, into a git-ignored folder, and prints a diff against the last download.
    → Check: running it twice in a row reports "no changes".
-4. **Write the reference files**, starting with `audit-checklist.md` and `api-settings.md` (they carry most of the value), then the eight model files, then `general-techniques.md`, `snippets.md` and `legacy.md`. Every rule gets a source link.
+4. **Write the reference files**, starting with `audit-checklist.md` and `api-settings.md` (they carry most of the value), then the model files, then `general-techniques.md`, `snippets.md` and `legacy.md`. Every rule gets a source link.
    → Check: a script confirms every link in the reference files points to a page that exists, and every model in the guide's table has a file.
 5. **Write `SKILL.md`** with the workflow from section 3.
    → Check: under 500 lines; frontmatter passes validation; the evaluations from step 2 now pass (target: at least 8 of 10).

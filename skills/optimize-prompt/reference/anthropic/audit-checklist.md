@@ -46,8 +46,8 @@ Sources: [Refusals: keep reasoning in thinking blocks](https://platform.claude.c
 - Opus 5, and Opus 5.5 (inherited from Opus 5): **remove, do not rewrite.** It verifies on its own; these lines cause over-verification and cost tokens with no quality gain. Same for "double-check" style self-correction requests.
 - Sonnet 5.5 and Haiku 5.5 **coding agents**: at low effort (Haiku also at medium) they sometimes report a change as done without running a check. If the prompt is for a coding agent, a specific verification paragraph helps; see `snippets.md`, "Run a real check before reporting code done". Vague "double-check" lines do not do this job.
 - Sonnet 5.5 at `xhigh`/`max`: it starts its own review rounds; if that is unwanted, use the "stop when checks pass" block in `models/sonnet-5-5.md`.
-- Fable 5.2: at `xhigh`/`max` **do not add** a self-check step, because it may already start subagents to review its own work; list it under open questions in the report. At lower effort its page says nothing: add one only if the user reports unchecked work.
-- Other current models (not Fable 5.2): a short self-check against stated criteria ("Before you finish, verify your answer against [criteria]") is recommended for coding and math.
+- Fable 5.2: the general self-check advice below applies. Its page reports that at `xhigh`/`max` it was seen using subagents to review its own work in one coding product; when adding a self-check at those levels, mention this in the report as a possible extra cost to test.
+- Other current models: a short self-check against stated criteria ("Before you finish, verify your answer against [criteria]") is recommended for coding and math.
 
 Sources: [Opus 5: task scope and over-verification](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5#task-scope-and-over-verification); best practices, "Ask Claude to self-check".
 
@@ -57,7 +57,7 @@ Sources: [Opus 5: task scope and over-verification](https://platform.claude.com/
 - Opus 5.5 **chat** prompts: **remove.** Effort is the control; removing the line made replies start sooner with no clear quality loss.
 - Sonnet 5.5 asked for a JSON answer that needs several steps of working out: **add** "Think the problem through before you answer." (with adaptive thinking).
 - Opus 4.8 and Sonnet 5 at `low` effort on multistep problems: a targeted line is fine ("This task involves multistep reasoning. Think carefully through the problem before responding."), but recommend raising effort first.
-- Fable 5.2: effort is the documented control, and at `high` and above it already thinks before almost every reply. Do not add or strengthen "think more" lines; set effort instead.
+- Fable 5.2: no documented verdict for "think more" lines. Its page names effort as the control and says that at `high` and above it thinks before almost every reply, so recommend an effort level first. If you remove or keep such a line, say it is a judgment call, not documented guidance.
 - General: "think thoroughly" beats a hand-written step-by-step plan for how to reason.
 
 **Spot it, kind B, "think less":** "keep your thinking short", "don't deliberate", "answer directly".
@@ -92,7 +92,7 @@ Source: best practices, "Control the format of responses"; [Fable 5.1: formattin
 
 **Spot it, suppressing:** "hold all findings for the final response", "do not narrate", "keep updates to a minimum".
 - Fable 5.1, Sonnet 5.5: **remove.** These models already write few user-facing updates; add a positive update instruction only if the product shows the model's work live.
-- Fable 5.2 also writes little during long tool runs. Where users watch live, use the update text in `models/fable-5-2.md` ("Long agentic turns look silent"); when you add that text, **remove** any rule that suppresses updates, because the two contradict each other and this model follows instructions closely. Where nobody watches live, its page says nothing about suppression rules: keep the rule and mention it in the report.
+- Fable 5.2 also writes little during long tool runs. First recommend the client display setting (`display: "updates"` or `"summarized"`), because the updates may already exist as thinking blocks that the client does not show. Then, where users watch live and still get too few updates, use the update text in `models/fable-5-2.md` ("Long agentic turns look silent"); when you add that text, **remove** any rule that suppresses updates, because the two contradict each other and this model follows instructions closely. Where nobody watches live, its page says nothing about suppression rules: keep the rule and mention it in the report.
 
 **Spot it, forcing:** "after every 3 tool calls, summarize progress".
 - Opus 4.8, Sonnet 5: **remove.** They give regular updates without it. Describe the wanted shape of updates instead, with an example, if needed.

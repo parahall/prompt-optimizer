@@ -13,11 +13,12 @@ Symptoms covered:
 - Long agentic turns look silent, or the first tool call comes with no word to the user
 - Agent sessions start more subagents than the task needs
 - Final reports or handoffs are hard to follow for someone who did not watch the work
+- Legitimate security or life-science work gets refusals
 - Easy requests take too long or cost too much
 
-## How it differs from earlier models
+## How it differs from Fable 5.1
 
-- The page does not say Fable 5.1's advice still applies, so this file does not inherit it; do not load `fable-5-1.md` to fill in this model. Instead, the page lists habits from Fable 5.1 and Opus 5.5 prompts to remove (see "Remove from prompts"). For the narrow fallback rule in `SKILL.md`, the one earlier file is `fable-5-1.md`. For a migration, load the source model's file as `SKILL.md` says.
+- The page compares it with "earlier models" in general, mostly Fable 5.1 and Opus 5.5. It does not say Fable 5.1's advice still applies, so this file does not inherit it; do not load `fable-5-1.md` to fill in this model. Instead, the page lists habits from Fable 5.1 and Opus 5.5 prompts to remove (see "Remove from prompts"). For the narrow fallback rule in `SKILL.md`, the one earlier file is `fable-5-1.md`. For a migration, load the source model's file as `SKILL.md` says.
 - At `high` and above it **thinks before almost every reply**, even a greeting. An instruction to answer directly does not stop it at `medium` and above (Fable 5.1 usually followed such a line). Effort is the control.
 - **Effort barely changes reply length.** Use the prompt for length and tone.
 - More likely to **stop early** on long multistep tasks, mostly at `low` and `medium`.
@@ -41,7 +42,7 @@ Symptoms covered:
 ## Add when you see this symptom
 
 ### Agentic turns end before the work is done (more often at `low` and `medium`)
-Add for agentic work at `low` or `medium`, or when early stops are seen. The page calls this text a starting point: insert it as written unless the product needs changes, and when adapting, keep its distinction between ordinary obstacles (diagnose and work through them) and deliberate blockers (leave them alone and report them). Expect about 30 percent more output tokens. It removed most endings that ask permission or offer to continue, but not endings that list what remains and then stop. Because the model asks less with this text, keep the product's own confirmation step for risky or irreversible actions.
+Add for agentic work at `low` or `medium`, or when early stops are seen. Insert it word for word. The page calls it a starting point, so change its wording only when the user's product requires it, and then keep its distinction between ordinary obstacles (diagnose and work through them) and deliberate blockers (leave them alone and report them). Expect about 30 percent more output tokens. It removed most endings that ask permission or offer to continue, but not endings that list what remains and then stop. Because the model asks less with this text, keep the product's own confirmation step for risky or irreversible actions.
 
 > Quoted from Anthropic · "Finish the whole task"
 ```text
@@ -64,6 +65,7 @@ Mostly context and harness cleanup; report these as recommendations. ("Keep caut
 - Name the steps that need no approval, for example listing retries (only for calls that are safe to repeat). A general instruction to act more freely changed nothing.
 - Check what reviewer agents attach to the context (a reviewer's "stop at the first error" blocked retries that a prompt line allowed).
 - Write the exception into the rule itself ("get a go-ahead first, then …"); a separate line saying an approved step has its go-ahead barely helped.
+- If a system is already stuck, suggest restarting it with its memory and notes trimmed, keeping a copy of the originals. ("Review instructions written for earlier models")
 - Keep the product's own confirmation step for risky or irreversible actions.
 
 ### A coding agent repeats existing code instead of merging it, or reports nearby problems without fixing them
@@ -104,7 +106,7 @@ Even with these, expect several tool calls between updates. For asynchronous wor
 First review the lines in system prompts, skills, and agent files that ask for delegation. Change the description of the tool that starts subagents only if the model still over-delegates. The page does not print Anthropic's tested description; it says the description does three things, cost first: states what a subagent adds to the cost of a session, says when delegation is worth it and when it isn't, and tells the model how to brief a subagent. Write such a description in your own words, mark it as untested wording, and suggest testing; more text about cost means less delegation. At `xhigh` and `max` the model may start subagents to review its own work, so recommend checking which model the harness runs subagents on. ("Set expectations for subagents")
 
 ### Final reports or handoffs are hard to follow for someone who did not watch the work
-Add where the model writes final reports or handoffs. The page says to adjust the text to the readers and the product, so it may be adapted; remove hard style rules first. It made reports less dense, and on workflow tasks it shortened sentences. Length or required details can be added as separate instructions.
+Add where the model writes final reports or handoffs. Insert it word for word; the page allows adjusting it to the readers and the product, so change its wording only when the user's product requires it. Remove hard style rules first. It made reports less dense, and on workflow tasks it shortened sentences. Length or required details can be added as separate instructions.
 
 > Quoted from Anthropic · "Make reports easy to follow"
 ```text
@@ -114,6 +116,9 @@ Write for an intelligent but low-context reader. The person reading has not seen
 Use plain words, and write in clear, understandable full sentences. Do not use a term or abbreviation that you made up during the work. Say what the thing is in a way any reader would understand. Write mostly in the style of ASD-STE100 Simplified Technical English: short sentences, one idea per sentence, active voice, and consistently using the same word for the same thing. Use a paragraph of flowing prose where ideas connect, and keep bullets for lists of separate items. Leave out unnecessary details unless the reader asks and practice concision, but do ensure that your messages have the key context. Aim to make your user-facing text as human-readable and clear as possible.
 ```
 
+### Legitimate security or life-science work gets refusals
+Not a prompt problem: benign cybersecurity and life-science work can trigger the `cyber` and `bio` classifiers. Point the user to Anthropic's [Cyber Verification Program](https://support.claude.com/en/articles/14604842) and [Life Sciences Verification Program](https://www.anthropic.com/news/life-sciences-verification-program); Mythos 5.2 offers the same capabilities only to organizations verified through them. The page gives no rewording advice for this (the Fable 5.1 tips on phrasing are not documented for Fable 5.2). ("Safeguard refusals")
+
 ### Easy requests take too long or cost too much
 A setting, not wording: run those easy turns at a lower effort level, with the per-message effort change where available (see API settings), and keep long agentic work at `medium` or above. Prompt instructions to answer directly do not work at `medium` and above. ("Calibrate effort")
 
@@ -121,7 +126,7 @@ A setting, not wording: run those easy turns at a lower effort level, with the p
 
 - Set `effort` to `high` explicitly, then run evals at `medium` and `xhigh` too. `low`: quick back-and-forth, well-specified tasks, high-volume work such as fast subagents. `medium`: interactive coding, chat, everyday knowledge work. `high`: hard coding, research, agentic work, long unattended runs. `xhigh`: hardest long-running coding and agentic work, only with a measured gain. `max`: measuring the ceiling, or open-ended problems where time and tokens don't matter. Re-run the sweep instead of copying a level from Fable 5.1 or Opus 5.5.
 - At `high` and above, set a large `max_tokens` (it caps thinking plus reply).
-- Mixing levels in one workflow (for example plan at `medium`, run the long unattended part higher): per-message effort change (beta header `mid-conversation-output-config-2026-07-01`; on Amazon Bedrock's InvokeModel API, in the body's `anthropic_beta` array) where the platform supports it, which keeps the prompt cache; otherwise a new top-level `effort`, which restarts the cache.
+- Mixing levels in one workflow (for example plan at `medium`, run the long unattended part higher): per-message effort change (beta; header and platform details in `api-settings.md`) where the platform supports it, which keeps the prompt cache; otherwise a new top-level `effort`, which restarts the cache.
 - Apply prompt changes to **new conversations only**. Mid-conversation, put new instructions in the newest turn, or in a mid-conversation system message where available. Keep history append-only; to shorten it, use context editing or compaction that keeps no earlier turns after the summary. `thinking.block_binding.prefix_mismatch_behavior: "drop_block"` (beta header `thinking-binding-controls-2026-08-01`) drops invalid thinking blocks instead of erroring, but the model then thinks again and uses more output tokens.
 
 ## Known traps
