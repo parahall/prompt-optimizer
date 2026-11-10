@@ -77,6 +77,14 @@ The plugin has no fixed version number, so every change merged to `main` counts 
 
 A running session keeps the version it started with. Run `/reload-plugins` or start a new session to use the update.
 
+### In the Claude app (web or desktop)
+
+1. Download [optimize-prompt.zip](https://github.com/parahall/prompt-optimizer/releases/latest/download/optimize-prompt.zip).
+2. Make sure "Code execution and file creation" is on in Settings > Capabilities (on by default on Team plans).
+3. Go to Customize > Skills, click "+", then "+ Create skill", choose "Upload a skill", and upload the ZIP.
+
+Then ask Claude to optimize a prompt for a named model. To update, download the ZIP again and upload it. Maintainers build the ZIP with `tools/build-skill-zip.sh` and attach it to a GitHub release.
+
 ### As a personal skill from a clone
 
 ```bash
