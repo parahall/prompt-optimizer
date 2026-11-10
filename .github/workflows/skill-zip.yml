@@ -1,0 +1,63 @@
+# Rebuilds the Claude app ZIP of the skill and publishes it as a new GitHub release
+# whenever the skill changes on main. The download link
+# https://github.com/parahall/prompt-optimizer/releases/latest/download/optimize-prompt.zip
+# always points to the newest release.
+name: Publish skill ZIP
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "skills/optimize-prompt/**"
+      - "tools/build-skill-zip.sh"
+  workflow_dispatch: # also allows a manual run from the Actions tab
+
+permissions:
+  contents: write # needed to create releases
+
+concurrency:
+  group: skill-zip
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build the ZIP
+        run: tools/build-skill-zip.sh
+
+      - name: Check the ZIP
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp -d)"
+          unzip -q dist/optimize-prompt.zip -d "$tmp"
+          skill="$tmp/optimize-prompt/SKILL.md"
+          test -f "$skill" || { echo "SKILL.md is missing at optimize-prompt/ in the ZIP"; exit 1; }
+          # The Claude app accepts only these header fields: name, description, license,
+          # allowed-tools, metadata, compatibility.
+          header="$(awk 'NR==1 && /^---$/ {inside=1; next} inside && /^---$/ {exit} inside' "$skill")"
+          echo "$header" | grep -q '^name: optimize-prompt$' || { echo "name field missing or wrong"; exit 1; }
+          echo "$header" | grep -q '^description: ' || { echo "description field missing"; exit 1; }
+          bad="$(echo "$header" | grep -oE '^[a-zA-Z_-]+:' | grep -vxE '(name|description|license|allowed-tools|metadata|compatibility):' || true)"
+          test -z "$bad" || { echo "Header fields the Claude app rejects: $bad"; exit 1; }
+          echo "ZIP looks right."
+
+      - name: Publish a release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="skill-$(date -u +%Y-%m-%d)-${GITHUB_SHA::7}"
+          gh release create "$tag" dist/optimize-prompt.zip \
+            --target "$GITHUB_SHA" \
+            --title "Skill ZIP for the Claude app ($(date -u +%Y-%m-%d))" \
+            --latest \
+            --notes "Upload \`optimize-prompt.zip\` in the Claude app: Customize > Skills > + > Create skill > Upload a skill. \"Code execution and file creation\" must be on (Settings > Capabilities; on by default on Team plans). Built automatically from ${GITHUB_SHA::7}.
+
+          For Claude Code, install the plugin instead:
+          \`\`\`
+          /plugin marketplace add parahall/prompt-optimizer
+          /plugin install prompt-optimizer@prompt-optimizer
+          \`\`\`"
