@@ -1,6 +1,6 @@
 # Shared text blocks for Claude prompts
 
-Checked against the docs on 2026-11-08. Every block below is **quoted word for word from Anthropic** and marked with its page and section, because Anthropic tested this exact wording. Insert a block unchanged, except where it says to fill in a placeholder. Add a block only when its "Use when" matches the prompt's situation; never add blocks just because they exist.
+Checked against the docs on 2026-11-10. Every block below is **quoted word for word from Anthropic** and marked with its page and section, because Anthropic tested this exact wording. Insert a block unchanged, except where it says to fill in a placeholder. Add a block only when its "Use when" matches the prompt's situation; never add blocks just because they exist.
 
 Short page names used below:
 - BP = [Prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices)

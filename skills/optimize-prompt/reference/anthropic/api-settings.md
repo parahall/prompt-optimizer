@@ -1,6 +1,6 @@
 # API settings for Claude models
 
-Checked against the docs on 2026-11-08. Sources: [Effort](https://platform.claude.com/docs/en/build-with-claude/effort), [Thinking support by model](https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting#thinking-support-defaults-and-rejected-configurations-by-model), [Steering thinking](https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost), [Models overview](https://platform.claude.com/docs/en/models/overview), and each model's prompting page.
+Checked against the docs on 2026-11-10. Sources: [Effort](https://platform.claude.com/docs/en/build-with-claude/effort), [Thinking support by model](https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting#thinking-support-defaults-and-rejected-configurations-by-model), [Steering thinking](https://platform.claude.com/docs/en/build-with-claude/thinking-steering-and-cost), [Models overview](https://platform.claude.com/docs/en/models/overview), and each model's prompting page.
 
 Many problems are fixed by settings, not wording. Always report recommended settings next to the rewritten prompt. Only recommend settings the target model accepts.
 
@@ -45,7 +45,7 @@ Always say: start here, then compare two or three levels on real traffic.
 
 | Model | Chat, latency-sensitive | Agentic coding, multistep tools | Knowledge work, hard reasoning |
 |---|---|---|---|
-| Fable 5.2 | `low` for quick, well-specified, high-volume work; `medium` for chat and interactive coding | `high`; `xhigh` only with a measured gain | `high` (most of the gain is already there) |
+| Fable 5.2 | `low` for quick, well-specified, high-volume work; `medium` for chat and interactive coding | `high`; `xhigh` only with a measured gain | `medium` for everyday knowledge work; `high` for research and hard reasoning |
 | Fable 5.1 | `medium` or `low` (at `low` it searches less) | `high`; `xhigh`/`max` only with a measured gain | `high` |
 | Fable 5 | `medium` or `low` | `high`; `xhigh` for the most demanding | `high` |
 | Opus 5.5 | `low` or `medium` | `medium` (matched Opus 5 at `high` in Anthropic's tests) | `medium`; test `high` |
@@ -70,7 +70,7 @@ Report any of these found in the user's code or described setup:
 
 ## 5. Rules that affect how the prompt may change
 
-- **Keep the system prompt fixed within a conversation** on Fable 5.2 (the API enforces the prefix check for every account), Haiku 5.5, and the 5.1-generation models. Changing `system` or `tools` mid-conversation invalidates earlier thinking blocks (can return a 400 error). Put new instructions in a mid-conversation system message or the newest user turn instead. Tell the user to apply the optimized prompt to new conversations only.
+- **Keep the system prompt fixed within a conversation** on Fable 5.2 (the API enforces the prefix check for every account), Haiku 5.5, and the 5.1-generation models. Changing `system`, `tools`, or an earlier message mid-conversation invalidates the thinking blocks after the change (can return a 400 error; on Fable 5.2 the API enforces this for every account). Put new instructions in a mid-conversation system message or the newest user turn instead. Tell the user to apply the optimized prompt to new conversations only.
 - **Changing top-level effort between requests breaks the prompt cache.** For per-turn changes, recommend the per-message effort change (beta) on the models that support it: Fable 5.2, Mythos 5.2, Fable 5.1, Mythos 5.1, Opus 5.5, Opus 5, Sonnet 5.5, and Haiku 5.5 (not Fable 5). It needs the beta header `mid-conversation-output-config-2026-07-01`; without it the request returns a 400 error. With Amazon Bedrock's InvokeModel API, send that value in the request body's `anthropic_beta` array instead. Availability differs by platform; check the effort page's list for the user's platform. On Sonnet 5.5 with `between_tools` and on Haiku 5.5 with `thinking: {type: "disabled"}`, a per-message effort that differs from the level in effect also returns a 400 error; to vary effort per turn on those two models, use adaptive thinking.
 - **Read responses by block type.** On models where thinking is on, a reply may start with a `thinking` block; code that reads `content[0].text` breaks.
 - **Progress updates on Opus 5.5, Sonnet 5.5, Fable 5.2, Fable 5.1** arrive as thinking blocks that are empty at the default display. If the user says the agent "looks silent", recommend `display: "updates"` (beta header `thinking-display-updates-2026-08-18`) before changing the prompt. Only with adaptive thinking: on Sonnet 5.5 with `between_tools` the notes already come back with their summary text, and sending `display` returns a 400 error.

@@ -30,7 +30,7 @@ Symptoms covered:
 
 ## Remove from prompts
 
-- **Instructions to think less** ("answer directly without deliberating"): no effect at `medium` and above; recommend a lower effort level instead. ("Review instructions written for earlier models", "Calibrate effort")
+- **Instructions to think less** ("answer directly without deliberating"): no effect at `medium` and above. Remove them, and lower effort only for easy turns (with the per-message effort change); do not lower effort for long agentic work, because the model stops early more often at `low` and `medium`. ("Review instructions written for earlier models", "Calibrate effort")
 - **Requests to write reasoning in the reply** (`reasoning_extraction` refusals). To see how the model reasoned, recommend `display: "summarized"` and reading the thinking blocks. ("Safeguard refusals")
 - **The Opus 5.5 "treat that answer as done" lines** for chat: on Fable 5.2 they reduced thinking on follow-ups but made the model far less likely to point out mistakes in its earlier answers. Remove them where the model should keep re-checking earlier answers; elsewhere, keep them only after testing. ("Review instructions written for earlier models")
 - **Standing instructions to delegate** in system prompts, skills, and agent files, when the model starts more subagents than the tasks need. ("Review instructions written for earlier models")
@@ -115,7 +115,7 @@ Use plain words, and write in clear, understandable full sentences. Do not use a
 ```
 
 ### Easy requests take too long or cost too much
-A setting, not wording: run those turns at a lower effort level, with the per-message effort change where available (see API settings). Prompt instructions to answer directly do not work at `medium` and above. ("Calibrate effort")
+A setting, not wording: run those easy turns at a lower effort level, with the per-message effort change where available (see API settings), and keep long agentic work at `medium` or above. Prompt instructions to answer directly do not work at `medium` and above. ("Calibrate effort")
 
 ## API settings
 

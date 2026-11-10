@@ -1,6 +1,6 @@
 # Audit checklist for Claude prompts
 
-Checked against the docs on 2026-11-08. Main source: [Prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) and the per-model pages linked from each item.
+Checked against the docs on 2026-11-10. Main source: [Prompting best practices](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices) and the per-model pages linked from each item.
 
 Go through every item. For each pattern found in the prompt, apply the verdict for the target model. "Current models" means every model with a file in `models/`. Model files can add model-only items; this file holds the patterns that appear across models.
 
@@ -46,6 +46,7 @@ Sources: [Refusals: keep reasoning in thinking blocks](https://platform.claude.c
 - Opus 5, and Opus 5.5 (inherited from Opus 5): **remove, do not rewrite.** It verifies on its own; these lines cause over-verification and cost tokens with no quality gain. Same for "double-check" style self-correction requests.
 - Sonnet 5.5 and Haiku 5.5 **coding agents**: at low effort (Haiku also at medium) they sometimes report a change as done without running a check. If the prompt is for a coding agent, a specific verification paragraph helps; see `snippets.md`, "Run a real check before reporting code done". Vague "double-check" lines do not do this job.
 - Sonnet 5.5 at `xhigh`/`max`: it starts its own review rounds; if that is unwanted, use the "stop when checks pass" block in `models/sonnet-5-5.md`.
+- Fable 5.2 at `xhigh`/`max`: it may already start subagents to review its own work. Check for that before adding a self-check step, so the user does not pay for two reviews.
 - Other current models: a short self-check against stated criteria ("Before you finish, verify your answer against [criteria]") is recommended for coding and math.
 
 Sources: [Opus 5: task scope and over-verification](https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-5#task-scope-and-over-verification); best practices, "Ask Claude to self-check".
@@ -56,10 +57,11 @@ Sources: [Opus 5: task scope and over-verification](https://platform.claude.com/
 - Opus 5.5 **chat** prompts: **remove.** Effort is the control; removing the line made replies start sooner with no clear quality loss.
 - Sonnet 5.5 asked for a JSON answer that needs several steps of working out: **add** "Think the problem through before you answer." (with adaptive thinking).
 - Opus 4.8 and Sonnet 5 at `low` effort on multistep problems: a targeted line is fine ("This task involves multistep reasoning. Think carefully through the problem before responding."), but recommend raising effort first.
+- Fable 5.2: effort is the documented control, and at `high` and above it already thinks before almost every reply. Do not add or strengthen "think more" lines; set effort instead.
 - General: "think thoroughly" beats a hand-written step-by-step plan for how to reason.
 
 **Spot it, kind B, "think less":** "keep your thinking short", "don't deliberate", "answer directly".
-- Fable 5.2, Sonnet 5.5 and Haiku 5.5: **remove and recommend a lower effort level.** Prompt wording does not reliably reduce thinking on these models (on Fable 5.2, "answer directly without deliberating" did not stop thinking at `medium` and above).
+- Fable 5.2, Sonnet 5.5 and Haiku 5.5: **remove and recommend a lower effort level.** Prompt wording does not reliably reduce thinking on these models (on Fable 5.2, "answer directly without deliberating" did not stop thinking at `medium` and above). On Fable 5.2, lower effort only for easy turns, never for long agentic work that already stops early at `low` or `medium`.
 - Opus 5.5: lower effort first; "Answer directly without deliberating." may be added at `low` effort if time to first token still matters, and quality must be measured.
 - Opus 4.8, Sonnet 5, Fable 5 and 5.1: the steering line "Thinking adds latency and should only be used when it will meaningfully improve answer quality..." works; lowering effort is still the first lever.
 
@@ -101,6 +103,7 @@ Source: best practices, "Control the format of responses"; [Fable 5.1: formattin
 - Opus 5.5: uses fewer tokens than Opus 5; add the inherited conciseness block from `models/opus-5-5.md` only when replies are reported or clearly likely to be too long.
 - Opus 4.8, Sonnet 5: length follows task complexity; add a conciseness line only if the product needs a fixed style. Positive examples of the right length work better than "do not" lists.
 - Fable 5 and Fable 5.1: brevity and readability are steered by one short instruction; long lists of banned habits are unnecessary.
+- Fable 5.2: effort barely changes reply length. Set length and tone in the prompt, never by changing effort.
 
 ## 8. Severity filters in review prompts
 
