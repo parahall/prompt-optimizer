@@ -196,7 +196,7 @@ Gemini follows later with the same steps.
 
 All pages are on developers.openai.com and, like Anthropic's, have a plain Markdown copy when `.md` is added to the address. The list is in `tools/sources/openai.txt` (37 pages, downloaded and read).
 
-- **One "Using GPT-X" page per model family**: what's new, prompting best practices, migration. Families: GPT-6, GPT-5.6, 5.5, 5.4, 5.3-Codex, 5.2, 5.1, 5, 4.1.
+- **One "Using GPT-X" page per model family**: what's new, prompting best practices, migration. Families: GPT-6.2 (added on 2026-11-18), GPT-6, GPT-5.6, 5.5, 5.4, 5.3-Codex, 5.2, 5.1, 5, 4.1.
 - **Extra pages for some families**: "Prompting guidance for GPT-5.6 Sol" (the most detailed page), "Upgrading to GPT-5.4 / 5.5 / 5.6 Sol", a front-end prompt page written for GPT-5.5, and older cookbook prompting guides (GPT-5, 5.1, 5.2, 4.1, Codex). The cookbook guides for GPT-5 and 5.1 are marked "archived".
 - **General pages**: Prompt engineering (message roles, Markdown and XML sections, examples), Reasoning models (the `reasoning.effort` setting and its table), Reasoning best practices (older, written for the o-series models).
 - **Model catalog pages**: effort levels, context window, knowledge cutoff, price, endpoints.
@@ -229,6 +229,7 @@ skills/optimize-prompt/reference/openai/
 ├── api-settings.md         # per model: effort levels and default, verbosity, endpoint limits, parameters that error
 ├── snippets.md             # tested blocks shared by several families
 └── models/
+    ├── gpt-6-2.md          # GPT-6.2 Astra, GPT-6.2 Sol
     ├── gpt-6.md            # GPT-6 Astra, GPT-6.1 Sol, GPT-6.1 Terra, GPT-6 Luna, GPT-6 Sol
     ├── gpt-5-6.md          # GPT-5.6 Sol, Terra, Luna (with the 5.6 Sol prompting page)
     ├── gpt-5-5.md          # GPT-5.5 (rich own guidance, still widely used)

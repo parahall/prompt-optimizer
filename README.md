@@ -16,7 +16,7 @@ Why per model: the same instruction can help one model and hurt another. "Double
 
 **Supported now:**
 - Claude models: Fable 5.2, Fable 5.1, Fable 5, Opus 5.5, Opus 5, Opus 4.8, Sonnet 5.5, Sonnet 5, Haiku 5.5, and short notes for older models.
-- OpenAI GPT text models: the GPT-6 family (Astra, 6.1 Sol, 6.1 Terra, Luna, 6 Sol), the GPT-5.6 family (Sol, Terra, Luna), GPT-5.5, GPT-5.4 and 5.4 Mini, and short notes for 5.3-Codex, 5.2, 5.1, 5, and 4.1. Voice, image, and open-weight models are not covered.
+- OpenAI GPT text models: GPT-6.2 Astra and 6.2 Sol, the GPT-6 family (Astra, 6.1 Sol, 6.1 Terra, Luna, 6 Sol), the GPT-5.6 family (Sol, Terra, Luna), GPT-5.5, GPT-5.4 and 5.4 Mini, and short notes for 5.3-Codex, 5.2, 5.1, 5, and 4.1. Voice, image, and open-weight models are not covered.
 
 **Planned:** Google Gemini models.
 

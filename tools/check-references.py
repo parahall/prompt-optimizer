@@ -75,6 +75,7 @@ def check_coverage(provider: str, ref: Path, sources: str) -> int:
         # Families without their own file belong in legacy.md. A new family in the docs
         # fails this check until it is added here and to a file.
         family_files = {
+            "gpt-6.2-astra": "gpt-6-2.md",  # the GPT-6.2 page is named after Astra but covers Astra and Sol
             "gpt-6-astra": "gpt-6.md",  # the GPT-6 page is named after Astra but covers the family
             "gpt-5.6": "gpt-5-6.md",
             "gpt-5.5": "gpt-5-5.md",

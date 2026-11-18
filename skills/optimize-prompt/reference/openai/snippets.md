@@ -1,6 +1,6 @@
 # Where to find OpenAI's tested blocks
 
-Checked against the docs on 2026-11-08.
+Checked against the docs on 2026-11-18.
 
 OpenAI publishes its sample blocks per model family, so the quoted blocks live in the model files, each marked "Quoted from OpenAI" with its page and section. Insert a block word for word, and only when its symptom matches.
 
@@ -9,6 +9,10 @@ If the target family has no block for a symptom, do not load another family's fi
 | Symptom | Block | File |
 |---|---|---|
 | Model stops to ask or get approval where it should continue | Initiative and follow-through blocks | `models/gpt-6.md` |
+| Model proposes a next step and waits; long tasks end early; stops on an unclear detail | Task completion blocks | `models/gpt-6-2.md` |
+| Final answer carries working shorthand; drafts for an outside audience | Writing style blocks | `models/gpt-6-2.md` |
+| Code ignores project conventions or is too dense | Coding style block | `models/gpt-6-2.md` |
+| Frontend uses the wrong visuals or filler text | Frontend design block | `models/gpt-6-2.md` |
 | Approval rules repeated, or agent acts beyond the request | Autonomy and approval policy | `models/gpt-5-6.md` |
 | Unclear when to proceed or ask; instruction priority | `<default_follow_through_policy>`, `<instruction_priority>` | `models/gpt-5-4.md` |
 | App loads skills or AGENTS.md; model pauses | Skill priority sentence | `models/gpt-6.md` |
