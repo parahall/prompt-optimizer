@@ -35,8 +35,8 @@ The page describes GPT-6.2 Astra's behavior ("GPT-6.2 Astra behavior"):
 
 ## Remove from prompts
 
-- **"Be concise" and similar brevity lines** carried over from older models: the page says to revisit them, because the model is already concise and direct. Keep one only if the product needs a fixed length. ("GPT-6.2 Astra behavior")
-- **`temperature`, `top_p`, `logprobs`, `top_logprobs`**; in the Responses API also `message.output_text.logprobs` in `include`. ("Update API and model parameters")
+- **"Be concise" and similar brevity lines** carried over from older models: the page says to revisit them when migrating, because the model is already concise and direct. It gives no rule for when to keep one; recommend testing without the line. ("GPT-6.2 Astra behavior")
+- **Sampling settings.** In Chat Completions requests: `temperature`, `top_p`, `logprobs`, `top_logprobs`. In Responses requests: `temperature`, `top_p`, `top_logprobs`, and `message.output_text.logprobs` in `include`. ("Update API and model parameters")
 
 ## Add when you see this symptom
 
@@ -125,8 +125,9 @@ For visual work the page also suggests sharing a reference image, or giving the 
 - Effort: start with `medium` for a new integration. If the old request used `none` or `minimal`, use `low`. ("Update API and model parameters")
 - Tool calling: use the Responses API. Both models support Chat Completions, but tool calling requires Responses.
 - **Where the prompt goes:** put reusable instructions in a `developer` message as the first item in `input`, so they can be cached. Top-level `instructions` is appended after `input` on these models, billed at the uncached rate, and meant for guidance that applies only to the current request.
-- **Keep the conversation prefix unchanged.** Changing earlier history (rewriting a developer message, shortening a tool result, summarizing older turns) makes the API drop the reasoning items after the change; quality can drop and tokens rise. To update instructions mid-conversation, append a new `developer` message at the end. To change effort or the output schema, append a `configuration_update` item and keep the request-level setting the same. To add tools, append an `additional_tools` item. Apply an optimized prompt to new conversations, or append it. ("Keep the prefix unchanged")
-- From GPT-5.5 or earlier: replace `prompt_cache_retention` with `prompt_cache_options.ttl` (`"30m"`).
+- **Keep the conversation prefix unchanged.** Changing earlier history (rewriting a developer message, shortening a tool result, replacing older turns with a home-made summary) makes the API drop the reasoning items after the change; quality can drop and tokens rise. OpenAI's own compaction (`/responses/compact` or `context_management`) keeps them; a custom summary should go at the end of the context. To update instructions mid-conversation, append a new `developer` message at the end. To change effort or the output schema, append a `configuration_update` item and keep the request-level setting the same. To add tools, append an `additional_tools` item. Apply an optimized prompt to new conversations, or append it. ("Keep the prefix unchanged")
+- From GPT-5.5 or earlier: replace `prompt_cache_retention` with `prompt_cache_options.ttl` (`"30m"`). Also recommend reviewing OpenAI's prompt caching changes, including cache boundaries and cache-write billing.
+- With Zero Data Retention the Responses API treats `store` as `false`: for multi-turn work, pass the prior output items back in order, including encrypted reasoning items.
 
 ## Known traps
 

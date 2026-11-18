@@ -55,7 +55,7 @@ From the effort table in "Reasoning models" and the model pages. Always say: sta
 | Work | Start |
 |---|---|
 | Migrating a working setup to a newer model | **the old effective effort** (including its default), then test one level lower |
-| Classification, extraction, fast retrieval, voice | `none` where supported (`low` on GPT-6.2, GPT-6 Astra, and 6.1 Sol); try `low` first on GPT-5.5 |
+| Classification, extraction, fast retrieval, voice | `none` where supported (`low` on GPT-6 Astra and 6.1 Sol; GPT-6.2 rejects `none`, and its guide gives only `low` when migrating from `none` or `minimal` and `medium` for a new integration); try `low` first on GPT-5.5 |
 | Chat, support, drafting, tool use that must stay fast | `low` |
 | Agentic coding, research, planning, judgment | `medium` |
 | Hard debugging, long-horizon agents | `high` (compare with `medium`) |
@@ -68,7 +68,7 @@ Before raising effort, check whether the prompt is missing a success criterion, 
 
 Report any of these found in the user's code or described setup:
 
-- `temperature`, `top_p`, `logprobs` (and `top_logprobs`) with any effort other than `none`: error on GPT-5.4, GPT-5.2, and GPT-6; must be removed. On GPT-6.2 the migration guide says to omit them. On GPT-6 in the Responses API, also remove `message.output_text.logprobs` from `include`. On older GPT-5 models (`gpt-5`, `gpt-5-mini`, `gpt-5-nano`) they error at every setting. Use effort, `text.verbosity`, and `max_output_tokens` instead.
+- `temperature`, `top_p`, `logprobs` (and `top_logprobs`) with any effort other than `none`: error on GPT-5.4, GPT-5.2, and GPT-6; must be removed. On GPT-6.2 the migration guide says to omit `temperature`, `top_p`, `logprobs`, and `top_logprobs` from Chat Completions requests, and `temperature`, `top_p`, and `top_logprobs` from Responses requests. On GPT-6 in the Responses API, also remove `message.output_text.logprobs` from `include`. On older GPT-5 models (`gpt-5`, `gpt-5-mini`, `gpt-5-nano`) they error at every setting. Use effort, `text.verbosity`, and `max_output_tokens` instead.
 - Effort `none` on GPT-6.2 Astra or GPT-6.2 Sol: rejected; use `low`.
 - Effort `none` on GPT-6 Astra or GPT-6.1 Sol: HTTP 400; use `low`. Effort `none` on GPT-5.3-Codex: not supported.
 - Effort `minimal` on GPT-6 models: start with `low` instead.
@@ -80,7 +80,7 @@ Report any of these found in the user's code or described setup:
 ## 5. Rules that affect how the prompt may change
 
 - **Keep reusable prefixes stable.** Put static instructions first and per-request content last; avoid timestamps, request IDs, or changing tool lists near the top of a large system prompt. GPT-5.6 places its cache breakpoint near the latest message, so a stable prefix followed by a changing suffix can lose cache hits.
-- **Do not edit earlier turns.** On newer models, changing history before a reasoning item can make the API drop that reasoning. Starting with GPT-6.2 the Responses API always drops reasoning items after such a prefix edit, after certain model changes, and after a change of end user or organization. Append instead: a new `developer` message for new instructions, `additional_tools` for tools, `configuration_update` for effort or the output schema (see `models/gpt-6-2.md`). Change effort with `configuration_update` (GPT-6, with the limits in section 1), not by changing the request-level value.
+- **Do not edit earlier turns.** On newer models, changing history before a reasoning item can make the API drop that reasoning. Starting with GPT-6.2 the Responses API drops reasoning items after such a prefix edit, after certain model changes, and after a change of end user or organization. Exception: OpenAI's own compaction (`/responses/compact` or `context_management`) keeps the later reasoning items. Append instead: a new `developer` message for new instructions, `additional_tools` for tools, `configuration_update` for effort or the output schema (see `models/gpt-6-2.md`). Change effort with `configuration_update` (GPT-6, with the limits in section 1), not by changing the request-level value.
 - **Preserve `phase` values** when the app replays assistant messages itself; dropped `phase` can make progress updates count as final answers.
 - **JSON shapes described in prose**: recommend Structured Outputs (`text.format` with a JSON schema) instead, at least for GPT-5.5 and later. Keep a short description of fields only where the schema cannot express a rule.
 - **`instructions` parameter**: applies only to the current request; with `previous_response_id`, send it again on every call. Starting with GPT-6.2 it is appended after `input` and not cached, so put reusable instructions in a `developer` message as the first item in `input`.

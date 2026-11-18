@@ -77,7 +77,7 @@ This item is about asking the model to reason out loud. It is not about work pla
 
 - GPT-5.6: already concise; "Be concise" / "Keep it short" can make answers **too short**. Remove if so, set `text.verbosity`, and say what a short answer must keep (block in `models/gpt-5-6.md`).
 - GPT-5.5: concise and direct by default; for concise output prefer `text.verbosity: "low"`; conversational products may need warmth and rationale added.
-- GPT-6.2: more concise and direct by default; revisit "be concise" lines when migrating, and keep one only if the product needs a fixed length.
+- GPT-6.2: more concise and direct by default; revisit "be concise" lines when migrating; its page gives no rule for when to keep one, so recommend testing without the line.
 - GPT-6: tends toward detailed, formatted replies; explicit length and structure guidance is useful.
 - All: concrete limits (sentences, words, sections) work better than "brief".
 
