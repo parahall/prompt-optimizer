@@ -1,6 +1,6 @@
 # GPT-6 family: GPT-6 Astra, GPT-6.1 Sol, GPT-6.1 Terra, GPT-6 Luna, GPT-6 Sol
 
-Checked against the docs on 2026-11-08.
+Checked against the docs on 2026-11-18.
 Source: [Using GPT-6](https://developers.openai.com/api/docs/guides/latest-model/gpt-6-astra) (section names below refer to this page).
 API IDs `gpt-6-astra`, `gpt-6.1-sol`, `gpt-6.1-terra`, `gpt-6-luna`, `gpt-6-sol`. Settings: `api-settings.md`.
 
@@ -19,7 +19,7 @@ Symptoms covered:
 
 ## Family members
 
-- **GPT-6 Astra**: highest intelligence; most demanding reasoning, coding, computer use, professional work. Uses fewer output tokens than earlier models on many tasks. Effort `low` to `max`; **no `none`**. Default effort not stated in the docs.
+- **GPT-6 Astra**: for the most demanding work: complex reasoning, coding, computer use, research, document creation. Effort `low` to `max`; **no `none`**. Default effort not stated in the docs.
 - **GPT-6.1 Sol**: near-Astra quality at lower cost. Effort `low` to `max`, default `medium`; **no `none` or `minimal`**. Tool calling only in the Responses API.
 - **GPT-6.1 Terra**: fast and efficient; visual reasoning, computer use, clear natural writing. Effort `none` to `max`, default `medium`; start at `medium`.
 - **GPT-6 Luna**: fastest and cheapest, for focused high-volume tasks. Effort `none` to `max`, default `medium`.

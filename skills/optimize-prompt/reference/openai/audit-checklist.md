@@ -1,8 +1,10 @@
 # Audit checklist for OpenAI GPT prompts
 
-Checked against the docs on 2026-11-08. Sources: the model files in `models/` (each links its pages), [Prompt engineering](https://developers.openai.com/api/docs/guides/prompt-engineering), [Reasoning models](https://developers.openai.com/api/docs/guides/reasoning), [Reasoning best practices](https://developers.openai.com/api/docs/guides/reasoning-best-practices).
+Checked against the docs on 2026-11-18. Sources: the model files in `models/` (each links its pages), [Prompt engineering](https://developers.openai.com/api/docs/guides/prompt-engineering), [Reasoning models](https://developers.openai.com/api/docs/guides/reasoning), [Reasoning best practices](https://developers.openai.com/api/docs/guides/reasoning-best-practices).
 
 Go through every item, in this order. For each pattern found, apply the verdict for the target family. "Current families" means GPT-6, GPT-5.6, and GPT-5.5. OpenAI's main advice for current families is to **simplify**: removing repeated and conflicting rules usually helps more than adding blocks.
+
+**GPT-6.2 (Astra, Sol):** its page gives verdicts only where an item below names GPT-6.2. For the other items, apply the general rule in `general-techniques.md`; if you use a verdict written for GPT-6 or GPT-5.6, label it "documented for <family>, not confirmed for GPT-6.2".
 
 Contents
 1. Contradictions
@@ -56,7 +58,7 @@ Sources: GPT-5.6 prompting page, "Simplify prompts first"; Using GPT-5, "Instruc
 This item is about asking the model to reason out loud. It is not about work plans: staged plans, a plan tool, or naming the current phase of long work are still recommended for current families (GPT-5.6 upgrade guide: "staged plans, current-layer awareness, and concise handoffs for long work").
 
 **Verdict:**
-- GPT-5-class and GPT-6 models at effort `low` or higher: **remove.** They reason internally; OpenAI says such instructions are unnecessary and can hurt. Control depth with `reasoning.effort`; put success criteria in the prompt instead.
+- GPT-5-class and GPT-6 models (including GPT-6.2) at effort `low` or higher: **remove.** They reason internally; OpenAI says such instructions are unnecessary and can hurt. Control depth with `reasoning.effort`; put success criteria in the prompt instead.
 - At effort `none`: OpenAI documents that asking the model to **plan or outline its steps** helps on GPT-5.1, GPT-5.2, and GPT-5.4 (and at `minimal` on GPT-5). Keep such an instruction on those models. For other models that accept `none` (GPT-5.6, GPT-6.1 Terra, GPT-6 Luna, GPT-6 Sol), the docs do not say; keep an existing planning instruction, and say the benefit is documented only for the older models.
 - GPT-4.1 (not a reasoning model): prompted chain of thought helps; keep it.
 - "Think harder" / "use pro mode" / "generate several candidates": remove; use `reasoning.mode: "pro"` (GPT-5.6, GPT-6) if more work is wanted.
@@ -75,6 +77,7 @@ This item is about asking the model to reason out loud. It is not about work pla
 
 - GPT-5.6: already concise; "Be concise" / "Keep it short" can make answers **too short**. Remove if so, set `text.verbosity`, and say what a short answer must keep (block in `models/gpt-5-6.md`).
 - GPT-5.5: concise and direct by default; for concise output prefer `text.verbosity: "low"`; conversational products may need warmth and rationale added.
+- GPT-6.2: more concise and direct by default; revisit "be concise" lines when migrating; its page gives no rule for when to keep one, so recommend testing without the line.
 - GPT-6: tends toward detailed, formatted replies; explicit length and structure guidance is useful.
 - All: concrete limits (sentences, words, sections) work better than "brief".
 
@@ -86,6 +89,7 @@ This item is about asking the model to reason out loud. It is not about work pla
 
 ## 8. Asking, approval, and autonomy rules
 
+- GPT-6.2: when intent is unclear it **may propose a next step and wait**. For work that can run without supervision, add the task-completion blocks in `models/gpt-6-2.md` and say which decisions need the user.
 - GPT-6: **asks for clarification and approval more often** than earlier models. If the product wants autonomy, add the initiative blocks in `models/gpt-6.md`; remove hypothetical-risk warnings and approval steps for reversible actions.
 - GPT-5.6: "ask first" / "wait for approval" repeated in several places blocks safe work. **Keep one compact policy** (the autonomy block in `models/gpt-5-6.md`) and name safe local actions.
 - GPT-5.4 Mini: asks follow-up questions by default; say explicitly whether to ask one.
@@ -127,7 +131,7 @@ When migrating to a current family, look for and usually remove or rewrite:
 - "After every N tool calls, summarize progress" and narrate-every-step preamble rules; current guidance is sparse updates at phase changes.
 - The o1-era `system` role: use the `developer` role for reasoning models.
 - `temperature` / `top_p` settings: they fail once effort is above `none`.
-- Old effort values: `minimal` → start at `low` on GPT-6; an omitted effort that used to mean `none` (GPT-5.1–5.4) now means `medium` on 5.6 and 6.
+- Old effort values: `minimal` → start at `low` on GPT-6; `none` or `minimal` → `low` on GPT-6.2; an omitted effort that used to mean `none` (GPT-5.1–5.4) now means `medium` on 5.6 and 6.
 
 ## 15. Habits from other providers
 
@@ -135,4 +139,4 @@ When the prompt was tuned for Claude: remove Claude API wording (effort levels d
 
 ## 16. Layout for prompt caching
 
-Static content first (role, rules, examples, tool definitions), dynamic content last (user data, retrieved documents, timestamps). Changing text near the top of a large prompt on every request loses cache hits; on GPT-5.6 and GPT-6 cache writes also cost extra.
+Static content first (role, rules, examples, tool definitions), dynamic content last (user data, retrieved documents, timestamps). Changing text near the top of a large prompt on every request loses cache hits; on GPT-5.6 and GPT-6 cache writes also cost extra. On GPT-6.2, top-level `instructions` are appended after `input` and not cached: put reusable instructions in a `developer` message first in `input`.
